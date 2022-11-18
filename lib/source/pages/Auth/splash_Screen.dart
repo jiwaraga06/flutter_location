@@ -18,7 +18,14 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
-        child: CircularProgressIndicator()
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children:[
+            Image.asset("assets/img/security3.jpg",height: 100),
+            const SizedBox(height: 12),
+            const CupertinoActivityIndicator(radius: 14)
+          ],
+        )
       ),
     );
   }

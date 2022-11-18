@@ -76,18 +76,23 @@ class _LoginState extends State<Login> {
               final materialBanner = MyBanner.bannerFailed(json['message']);
               ScaffoldMessenger.of(context)
                 ..hideCurrentMaterialBanner()
-                ..showMaterialBanner(materialBanner);
+                ..showSnackBar(materialBanner);
             } else {
               final materialBanner = MyBanner.bannerSuccess(json['message']);
               ScaffoldMessenger.of(context)
                 ..hideCurrentMaterialBanner()
-                ..showMaterialBanner(materialBanner);
+                ..showSnackBar(materialBanner);
             }
-          } else {
+          } else if (statusCode == 422) {
             final materialBanner = MyBanner.bannerFailed("${json['message']} \n ${json['errors']['barcode'][0]} \n ${json['errors']['password'][0]}");
             ScaffoldMessenger.of(context)
               ..hideCurrentMaterialBanner()
-              ..showMaterialBanner(materialBanner);
+              ..showSnackBar(materialBanner);
+          } else if (statusCode == 400) {
+            final materialBanner = MyBanner.bannerFailed(json['message']);
+            ScaffoldMessenger.of(context)
+              ..hideCurrentMaterialBanner()
+              ..showSnackBar(materialBanner);
           }
         }
       },
@@ -99,23 +104,30 @@ class _LoginState extends State<Login> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const SizedBox(height: 50),
-                Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 8),
+                    Center(child: Image.asset("assets/img/security3.jpg", height: 100)),
+                    const SizedBox(height: 20),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 12.0),
+                      child: Text(
                         "Selamat Datang,",
                         style: GoogleFonts.lato(color: Colors.black, fontSize: 28, fontWeight: FontWeight.w800),
                       ),
-                      const SizedBox(height: 8),
-                      Text(
+                    ),
+                    const SizedBox(height: 8),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 12.0),
+                      child: Text(
                         "Silahkan masuk untuk lanjut",
-                        style: GoogleFonts.lato(color: Colors.grey, fontSize: 22, fontWeight: FontWeight.w800),
+                        style: GoogleFonts.lato(color: Colors.grey, fontSize: 22, fontWeight: FontWeight.w500),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
+
                 const SizedBox(height: 100),
                 Container(
                   margin: const EdgeInsets.all(8.0),
@@ -145,31 +157,31 @@ class _LoginState extends State<Login> {
                 const SizedBox(height: 50),
                 CustomButton(
                   onPressed: () {
-                    BlocProvider.of<AuthCubit>(context).login(controllerUsername.text, controllerPassword.text);
+                    BlocProvider.of<AuthCubit>(context).login(context, controllerUsername.text, controllerPassword.text);
                     if (formkey.currentState!.validate()) {}
                   },
                   text: "Login",
                 ),
                 const SizedBox(height: 8),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Lupa Password ?",
-                      style: GoogleFonts.lato(fontSize: 18),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, GANTI_PASSWORD);
-                      },
-                      child: Text(
-                        " Klik Disini",
-                        style: GoogleFonts.lato(fontSize: 18),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.center,
+                //   children: [
+                //     Text(
+                //       "Lupa Password ?",
+                //       style: GoogleFonts.lato(fontSize: 18),
+                //     ),
+                //     TextButton(
+                //       onPressed: () {
+                //         Navigator.pushNamed(context, GANTI_PASSWORD);
+                //       },
+                //       child: Text(
+                //         " Klik Disini",
+                //         style: GoogleFonts.lato(fontSize: 18),
+                //       ),
+                //     ),
+                //   ],
+                // ),
+                // const SizedBox(height: 8),
               ],
             ),
           ),

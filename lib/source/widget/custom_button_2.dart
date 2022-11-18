@@ -29,7 +29,7 @@ class CustomButton2 extends StatelessWidget {
             ],
           ),
           child: Container(
-              height: 60,
+              height: 50,
               alignment: Alignment.center,
               child: Text(
                 "$text",

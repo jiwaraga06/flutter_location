@@ -16,7 +16,7 @@ class CustomButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(8.0),
         child: Ink(
           decoration: BoxDecoration(
-            // color: Colors.red,
+            color: Colors.blue[700],
             borderRadius: BorderRadius.circular(8.0),
             boxShadow: [
               BoxShadow(
@@ -26,18 +26,18 @@ class CustomButton extends StatelessWidget {
                 offset: Offset(1, 3),
               ),
             ],
-            gradient: const LinearGradient(
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-              colors: [
-                Color(0xFF0F4C75),
-                Color(0xFF3282B8),
-                Color(0xFFBBE1FA),
-              ]
-            )
+            // gradient: const LinearGradient(
+            //   begin: Alignment.centerLeft,
+            //   end: Alignment.centerRight,
+            //   colors: [
+            //     Color(0xFF0F4C75),
+            //     Color(0xFF3282B8),
+            //     Color(0xFFBBE1FA),
+            //   ]
+            // )
           ),
           child: Container(
-              height: 60,
+              height: 50,
               alignment: Alignment.center,
               child: Text(
                 "$text",

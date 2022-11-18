@@ -51,6 +51,7 @@ dependencies:
   google_fonts: ^3.0.1
   marquee: ^2.2.3
   device_info_plus: ^8.0.0
+  animated_bottom_navigation_bar: ^1.1.0
 
 dev_dependencies:
   flutter_test:
