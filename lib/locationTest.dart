@@ -78,7 +78,7 @@ class _TesterLocationState extends State<TesterLocation> {
 
       if (backgroundExecution) {}
     }
-    // FlutterBackground.isBackgroundExecutionEnabled;
+    FlutterBackground.isBackgroundExecutionEnabled;
   }
 
   @override

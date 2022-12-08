@@ -14,3 +14,12 @@ class LoginLoaded extends AuthState {
 }
 
 class LoginMessage extends AuthState {}
+
+class LogoutLoading extends AuthState {}
+
+class LogoutLoaded extends AuthState {
+  final int? statusCode;
+  dynamic json;
+
+  LogoutLoaded({this.statusCode, this.json});
+}

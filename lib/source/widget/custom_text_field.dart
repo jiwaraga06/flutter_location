@@ -23,7 +23,7 @@ class CustomFormField extends StatelessWidget {
     return TextFormField(
       controller: controller,
       cursorColor: Color(0xFF0D4C92),
-      style: GoogleFonts.lato(),
+      style: GoogleFonts.lato(fontSize: 17,fontWeight: FontWeight.w600,),
       decoration: InputDecoration(
         hintText: hint,
         labelText: label,
@@ -33,7 +33,11 @@ class CustomFormField extends StatelessWidget {
         labelStyle: GoogleFonts.lato(
           color: Color(0xFF0D4C92),
         ),
-        hintStyle: GoogleFonts.lato(),
+        prefixIcon: iconLock!,
+        hintStyle: GoogleFonts.lato(
+          fontSize: 17,
+          fontWeight: FontWeight.w600,
+        ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16.0),
           borderSide: BorderSide(

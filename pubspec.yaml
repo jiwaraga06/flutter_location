@@ -52,6 +52,20 @@ dependencies:
   marquee: ^2.2.3
   device_info_plus: ^8.0.0
   animated_bottom_navigation_bar: ^1.1.0
+  shimmer: ^2.0.0
+  pull_to_refresh: ^2.0.0
+  accordion: ^2.5.1
+  toggle_switch: ^2.0.1
+  awesome_dialog: ^3.0.2
+  flutter_barcode_scanner: ^2.0.0
+  image_cropper: ^3.0.1
+  image_picker: ^0.8.6
+  flutter_native_image: ^0.0.6+1
+  flutter_background_service: ^2.4.5
+  mqtt_client: ^9.7.2
+  connectivity_plus: ^3.0.2
+  sqflite: ^2.2.2
+  path_provider: ^2.0.11
 
 dev_dependencies:
   flutter_test:
@@ -78,6 +92,11 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/img/security3.jpg
+    - assets/img/location_marker.png
+    - assets/img/marker2.png
+    - assets/img/marker3.png
+    - assets/img/marker4.png
+    - assets/img/background.jpg
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -9,6 +9,7 @@ class TabBarLoading extends TabBarState {}
 
 class TabBarLoaded extends TabBarState {
   dynamic user_roles;
+  dynamic data;
 
-  TabBarLoaded({this.user_roles});
+  TabBarLoaded({this.user_roles, this.data});
 }

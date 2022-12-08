@@ -3,8 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_location/source/pages/Auth/ganti_password.dart';
 import 'package:flutter_location/source/pages/Auth/login.dart';
 import 'package:flutter_location/source/pages/Auth/splash_Screen.dart';
+import 'package:flutter_location/source/pages/Dashboard/Checkpoint/MenuCheckpoint/addCheckpoint.dart';
+import 'package:flutter_location/source/pages/Dashboard/Checkpoint/MenuCheckpoint/editCheckpoint.dart';
+import 'package:flutter_location/source/pages/Dashboard/Checkpoint/SubTask/addSubtask.dart';
+import 'package:flutter_location/source/pages/Dashboard/Checkpoint/SubTask/editSubtask.dart';
+import 'package:flutter_location/source/pages/Dashboard/Checkpoint/Task/addTask.dart';
+import 'package:flutter_location/source/pages/Dashboard/Checkpoint/Task/editTask.dart';
+import 'package:flutter_location/source/pages/Dashboard/absenCheckpoint.dart';
 import 'package:flutter_location/source/pages/Dashboard/bottom_navbar/bottom_navbar.dart';
-import 'package:flutter_location/source/pages/Dashboard/checkpoint.dart';
+import 'package:flutter_location/source/pages/Dashboard/Checkpoint/checkpoint.dart';
 import 'package:flutter_location/source/pages/Dashboard/history.dart';
 import 'package:flutter_location/source/pages/Dashboard/home.dart';
 import 'package:flutter_location/source/pages/Dashboard/profile.dart';
@@ -32,19 +39,43 @@ class RouterNavigation {
       case LOGIN:
         return MaterialPageRoute(builder: (context) => const Login());
       case GANTI_PASSWORD:
-        return MaterialPageRoute(builder: (context) => const GantiPassword());
+        final data = settings.arguments;
+        return MaterialPageRoute(builder: (context) => GantiPassword(data: data));
       case BOTTOM_TABBAR:
         return MaterialPageRoute(builder: (context) => const CustomBottomNavBar());
       case HOME:
         return MaterialPageRoute(builder: (context) => const Home());
-      case CHECKPOINT:
-        return MaterialPageRoute(builder: (context) => const Checkpoint());
-      case SCAN_QR:
-        return MaterialPageRoute(builder: (context) => const ScanQR());
       case HISTORY:
         return MaterialPageRoute(builder: (context) => const History());
       case PROFILE:
         return MaterialPageRoute(builder: (context) => const Profile());
+      case SCAN_QR:
+        return MaterialPageRoute(builder: (context) => const ScanQR());
+      case ABSEN_SATPAM:
+        final data = settings.arguments;
+        return MaterialPageRoute(builder: (context) => AbsenCheckpoint(data: data));
+      //LOKASI
+      case CHECKPOINT:
+        return MaterialPageRoute(builder: (context) => const Checkpoint());
+      case ADD_CHECKPOINT:
+        return MaterialPageRoute(builder: (context) => const AddCheckPoint());
+      case EDIT_CHECKPOINT:
+        final data = settings.arguments;
+        return MaterialPageRoute(builder: (context) => EditCheckPoint(data: data));
+      // TASK
+      case ADD_TASK:
+        final data = settings.arguments;
+        return MaterialPageRoute(builder: (context) => AddTask(data: data));
+      case EDIT_TASK:
+        final data = settings.arguments;
+        return MaterialPageRoute(builder: (context) => EditTask(data: data));
+      // SUB TASK
+      case ADD_SUB_TASK:
+        final data = settings.arguments;
+        return MaterialPageRoute(builder: (context) => AddSubTask(data: data));
+      case EDIT_SUB_TASK:
+        final data = settings.arguments;
+        return MaterialPageRoute(builder: (context) => EditSubTask(data: data));
 
       default:
         return null;

@@ -33,8 +33,9 @@ class CustomTextFielPass extends StatelessWidget {
         errorStyle: GoogleFonts.lato(
           fontSize: 15
         ),
+        prefixIcon: iconLock!,
         suffixIcon: InkWell(
-          onTap: showPass,
+          onTap: showPass!,
           child: iconPass! ? Icon(FontAwesomeIcons.lock) : Icon(FontAwesomeIcons.lockOpen),
         ),
         labelStyle: GoogleFonts.lato(

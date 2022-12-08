@@ -9,7 +9,7 @@ class MyBanner {
       // forceActionsBelow: true,
       duration: Duration(seconds: 1),
       content: AwesomeSnackbarContent(
-        title: 'Oh Hey!!',
+        title: 'Suksess!!',
         message: message,
         contentType: ContentType.success,
         inMaterialBanner: true,
@@ -18,18 +18,18 @@ class MyBanner {
     );
   }
   static bannerFailed(message) {
-    return SnackBar(
+    return MaterialBanner(
       elevation: 0,
       backgroundColor: Colors.transparent,
-      duration: Duration(seconds: 2),
-      // forceActionsBelow: true,
+      // duration: Duration(seconds: 2),
+      forceActionsBelow: true,
       content: AwesomeSnackbarContent(
         title: 'Ups Error',
         message: message,
         contentType: ContentType.failure,
         inMaterialBanner: true,
       ),
-      // actions:  [SizedBox.shrink()],
+      actions:  [SizedBox.shrink()],
     );
   }
 }

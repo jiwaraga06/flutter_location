@@ -3,8 +3,9 @@ import 'dart:convert';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_location/source/data/Radius/cubit/radius_cubit.dart';
 import 'package:flutter_location/source/data/TabBar/cubit/tab_bar_cubit.dart';
-import 'package:flutter_location/source/pages/Dashboard/checkpoint.dart';
+import 'package:flutter_location/source/pages/Dashboard/Checkpoint/checkpoint.dart';
 import 'package:flutter_location/source/pages/Dashboard/history.dart';
 import 'package:flutter_location/source/pages/Dashboard/home.dart';
 import 'package:flutter_location/source/pages/Dashboard/profile.dart';
@@ -25,70 +26,114 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
   final iconList = <IconData>[
     FontAwesomeIcons.locationDot,
     FontAwesomeIcons.listCheck,
+    FontAwesomeIcons.qrcode,
     FontAwesomeIcons.calendar,
     FontAwesomeIcons.user,
   ];
-  List<String> textIcon = ['Home', 'Checkpoint', 'History', 'Profile'];
+  List<String> textIcon = ['Home', 'Checkpoint', 'QR', 'History', 'Profile'];
   static const List<Widget> _widgetOptions = <Widget>[
     Home(),
     Checkpoint(),
+    ScanQR(),
     History(),
     Profile(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<TabBarCubit>(context).background();
+    BlocProvider.of<TabBarCubit>(context).getInfoAll();
+    BlocProvider.of<TabBarCubit>(context).socketConnect();
+    BlocProvider.of<RadiusCubit>(context).getRadius();
+  }
+
   @override
   Widget build(BuildContext context) {
-    BlocProvider.of<TabBarCubit>(context).getInfoAll();
     return BlocListener<TabBarCubit, TabBarState>(
       listener: (context, state) {
-        if(state is TabBarLoaded){
-          var user_roles = state.user_roles;
+        if (state is TabBarLoaded) {
+          var user_roles = jsonDecode(state.user_roles);
           print(user_roles);
         }
       },
       child: Scaffold(
         body: _widgetOptions.elementAt(_bottomNavIndex),
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: const Color(0xFF27496D),
-          onPressed: () {
-            Navigator.pushNamed(context, SCAN_QR);
-          },
-          child: const Icon(FontAwesomeIcons.qrcode),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        bottomNavigationBar: AnimatedBottomNavigationBar.builder(
-          itemCount: iconList.length,
-          tabBuilder: (int index, bool isActive) {
-            final color = isActive ? const Color(0XFF27496D) : Colors.grey;
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  iconList[index],
-                  size: 24,
-                  color: color,
+        // floatingActionButton: FloatingActionButton(
+        //   backgroundColor: const Color(0xFF27496D),
+        //   onPressed: () {
+        //     Navigator.pushNamed(context, SCAN_QR);
+        //   },
+        //   child: const Icon(FontAwesomeIcons.qrcode),
+        // ),
+        // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        bottomNavigationBar: BottomNavigationBar(
+            backgroundColor: Colors.white,
+            type: BottomNavigationBarType.fixed,
+            unselectedItemColor: Colors.grey,
+            currentIndex: _bottomNavIndex,
+            onTap: (value) {
+              setState(() {
+                _bottomNavIndex = value;
+              });
+            },
+            selectedItemColor: Color(0XFF27496D),
+            selectedLabelStyle: TextStyle(fontSize: 15, color: Color(0XFF27496D)),
+            unselectedLabelStyle: TextStyle(fontSize: 14, color: Colors.grey),
+            items: [
+              BottomNavigationBarItem(
+                icon: Icon(FontAwesomeIcons.locationDot),
+                activeIcon: Icon(
+                  FontAwesomeIcons.locationDot,
+                  color: Color(0XFF27496D),
                 ),
-                const SizedBox(height: 4),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: Text(
-                    textIcon[index],
-                    maxLines: 1,
-                    style: TextStyle(color: color),
-                  ),
-                )
-              ],
-            );
-          },
+                label: 'Home',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(FontAwesomeIcons.listCheck),
+                activeIcon: Icon(
+                  FontAwesomeIcons.listCheck,
+                  color: Color(0XFF27496D),
+                ),
+                label: 'Checkpoint',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(FontAwesomeIcons.qrcode),
+                activeIcon: Icon(
+                  FontAwesomeIcons.qrcode,
+                  color: Color(0XFF27496D),
+                ),
+                label: 'Scan QR',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(FontAwesomeIcons.calendar),
+                activeIcon: Icon(
+                  FontAwesomeIcons.calendar,
+                  color: Color(0XFF27496D),
+                ),
+                label: 'History',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(FontAwesomeIcons.user),
+                activeIcon: Icon(
+                  FontAwesomeIcons.user,
+                  color: Color(0XFF27496D),
+                ),
+                label: 'Profile',
+              ),
+            ]),
+        // bottomNavigationBar: AnimatedBottomNavigationBar(
+        //   icons: iconList,
 
-          activeIndex: _bottomNavIndex,
-          gapLocation: GapLocation.center,
-          // activeColor: Color(0XFF27496D),
-          // inactiveColor: Colors.grey,
-          leftCornerRadius: 32,
-          rightCornerRadius: 32,
-          onTap: (index) => setState(() => _bottomNavIndex = index),
-        ),
+        //   activeIndex: _bottomNavIndex,
+        //   notchSmoothness: NotchSmoothness.defaultEdge,
+        //   gapLocation: GapLocation.end,
+        //   // activeColor: Color(0XFF27496D),
+        //   // inactiveColor: Colors.grey,
+        //   // leftCornerRadius: 32,
+        //   // rightCornerRadius: 32,
+        //   onTap: (index) => setState(() => _bottomNavIndex = index),
+        // ),
       ),
     );
   }
