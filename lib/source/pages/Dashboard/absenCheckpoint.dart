@@ -5,10 +5,12 @@ import 'package:accordion/accordion.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_location/source/data/CheckInternet/cubit/check_internet_cubit.dart';
 import 'package:flutter_location/source/data/Checkpoint/AbsenLokasi/cubit/absen_lokasi_cubit.dart';
 import 'package:flutter_location/source/widget/custom_banner.dart';
 import 'package:flutter_location/source/widget/custom_btnSave.dart';
 import 'package:flutter_location/source/widget/custom_loading.dart';
+import 'package:flutter_location/source/widget/status_koneksi.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -238,7 +240,10 @@ class _AbsenCheckpointState extends State<AbsenCheckpoint> {
                                   },
                                 );
                               }
-                              setState(() {});
+                              isiTask;
+                              setState(() {
+                                isiTask;
+                              });
                             },
                             child: Text('SIMPAN', style: TextStyle(fontSize: 17))),
                       ],
@@ -265,6 +270,11 @@ class _AbsenCheckpointState extends State<AbsenCheckpoint> {
     BlocProvider.of<AbsenLokasiCubit>(context).postAbsenLokasi(widget.data['id_lokasi'], isiTask.toList());
   }
 
+  void saveOffline() {
+    print('save offline');
+    BlocProvider.of<AbsenLokasiCubit>(context).postAbsenLokasiOffline(widget.data['id_lokasi'], widget.data['task'], isiTask.toList());
+  }
+
   @override
   void initState() {
     super.initState();
@@ -277,194 +287,215 @@ class _AbsenCheckpointState extends State<AbsenCheckpoint> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Absen Checkpoint'),
+        actions: [
+          BlocBuilder<CheckInternetCubit, CheckInternetState>(
+            builder: (context, state) {
+              if (state is CheckInternetStatus == false) {
+                return Container();
+              }
+              var status = (state as CheckInternetStatus).status;
+
+              return CustomStatusKoneksi(color: status == false ? Colors.red[600] : Colors.green);
+            },
+          ),
+        ],
       ),
-      body: BlocListener<AbsenLokasiCubit, AbsenLokasiState>(
-        listener: (context, state) {
-          if (state is AbsenLokasiloading) {
-            showDialog(
-              context: context,
-              barrierDismissible: false,
-              builder: (context) {
-                return const CustomLoading();
-              },
-            );
-          }
-          if (state is AbsenLokasiloaded) {
-            var json = state.json;
-            var statusCode = state.statusCode;
-            Navigator.pop(context);
-            if (statusCode == 200) {
-              Navigator.pop(context);
-              final materialBanner = MyBanner.bannerSuccess(json['message'].toString());
-              ScaffoldMessenger.of(context)
-                ..hideCurrentMaterialBanner()
-                ..showSnackBar(materialBanner);
-            } else {
-              final materialBanner = MyBanner.bannerFailed('${json['message']} \n ${json['errors'] != null ? json['errors'] : ''}');
-              ScaffoldMessenger.of(context)
-                ..hideCurrentMaterialBanner()
-                ..showMaterialBanner(materialBanner);
+      body: BlocBuilder<CheckInternetCubit, CheckInternetState>(builder: (context, state) {
+        if (state is CheckInternetStatus == false) {
+          return Container();
+        }
+        var status = (state as CheckInternetStatus).status;
+
+        return BlocListener<AbsenLokasiCubit, AbsenLokasiState>(
+          listener: (context, state) {
+            if (state is AbsenLokasiloading) {
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (context) {
+                  return const CustomLoading();
+                },
+              );
             }
-          }
-        },
-        child: CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(
-              child: Column(
-                children: [
-                  // ElevatedButton(
-                  //     onPressed: () {
-                  //       // isiTask.clear();
-                  //       // compare();
-                  //       print(compareList);
-                  //       print(isiTask);
-                  //     },
-                  //     child: Text('data')),
-                  Container(
-                    margin: const EdgeInsets.all(8.0),
-                    padding: const EdgeInsets.all(8.0),
-                    decoration: BoxDecoration(color: Colors.blue, borderRadius: BorderRadius.circular(8.0), boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        blurRadius: 1.3,
-                        spreadRadius: 1.3,
-                        offset: Offset(1, 3),
-                      )
-                    ]),
-                    child: Table(
-                      columnWidths: const {
-                        0: FixedColumnWidth(80),
-                        1: FixedColumnWidth(10),
-                      },
-                      children: [
-                        TableRow(
-                          children: [
-                            SizedBox(
-                              height: 35,
-                              child: Text(
-                                'Task',
+            if (state is AbsenLokasiloaded) {
+              var json = state.json;
+              var statusCode = state.statusCode;
+              Navigator.pop(context);
+              if (statusCode == 200) {
+                Navigator.pop(context);
+                final materialBanner = MyBanner.bannerSuccess(json['message'].toString());
+                ScaffoldMessenger.of(context)
+                  ..hideCurrentMaterialBanner()
+                  ..showSnackBar(materialBanner);
+              } else {
+                final materialBanner = MyBanner.bannerFailed('${json['message']} \n ${json['errors'] != null ? json['errors'] : ''}');
+                ScaffoldMessenger.of(context)
+                  ..hideCurrentMaterialBanner()
+                  ..showMaterialBanner(materialBanner);
+              }
+            }
+          },
+          child: CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(
+                child: Column(
+                  children: [
+                    // ElevatedButton(
+                    //     onPressed: () {
+                    //       // isiTask.clear();
+                    //       // compare();
+                    //       print(compareList);
+                    //       print(isiTask);
+                    //     },
+                    //     child: Text('data')),
+                    Container(
+                      margin: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.all(8.0),
+                      decoration: BoxDecoration(color: Colors.blue, borderRadius: BorderRadius.circular(8.0), boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          blurRadius: 1.3,
+                          spreadRadius: 1.3,
+                          offset: Offset(1, 3),
+                        )
+                      ]),
+                      child: Table(
+                        columnWidths: const {
+                          0: FixedColumnWidth(80),
+                          1: FixedColumnWidth(10),
+                        },
+                        children: [
+                          TableRow(
+                            children: [
+                              SizedBox(
+                                height: 35,
+                                child: Text(
+                                  'Task',
+                                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600, color: Colors.white),
+                                ),
+                              ),
+                              Text(
+                                ':',
                                 style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600, color: Colors.white),
                               ),
-                            ),
-                            Text(
-                              ':',
-                              style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600, color: Colors.white),
-                            ),
-                            Text(
-                              widget.data['task'],
-                              style: TextStyle(fontSize: 17, color: Colors.white),
-                            ),
-                          ],
-                        )
-                      ],
+                              Text(
+                                widget.data['task'],
+                                style: TextStyle(fontSize: 17, color: Colors.white),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 12.0),
-                  ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: widget.data['sub_task'].length,
-                    itemBuilder: (context, index) {
-                      var sub = widget.data['sub_task'][index];
-                      return Accordion(
-                        paddingListBottom: 2,
-                        disableScrolling: true,
-                        scaleWhenAnimating: true,
-                        openAndCloseAnimation: true,
-                        headerBackgroundColor: sub['is_aktif'] == 1 ? Color(0XFF00ABB3) : Color(0xFFE0144C),
-                        contentBorderColor: sub['is_aktif'] == 1 ? Color(0XFF00ABB3) : Color(0xFFE0144C),
-                        headerPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                        children: [
-                          AccordionSection(
-                            header: Text(
-                              sub['sub_task'],
-                              style: const TextStyle(color: Colors.white, fontSize: 17),
-                            ),
-                            content: Column(
-                              children: [
-                                Table(
-                                  columnWidths: const {
-                                    0: FixedColumnWidth(100),
-                                    1: FixedColumnWidth(10),
-                                  },
-                                  children: [
-                                    TableRow(
-                                      children: [
-                                        SizedBox(
-                                          height: 35,
-                                          child: Text(
-                                            'Keterangan',
+                    const SizedBox(height: 12.0),
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: widget.data['sub_task'].length,
+                      itemBuilder: (context, index) {
+                        var sub = widget.data['sub_task'][index];
+                        return Accordion(
+                          paddingListBottom: 2,
+                          disableScrolling: true,
+                          scaleWhenAnimating: true,
+                          openAndCloseAnimation: true,
+                          headerBackgroundColor: sub['is_aktif'] == 1 ? Color(0XFF00ABB3) : Color(0xFFE0144C),
+                          contentBorderColor: sub['is_aktif'] == 1 ? Color(0XFF00ABB3) : Color(0xFFE0144C),
+                          headerPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                          children: [
+                            AccordionSection(
+                              header: Text(
+                                sub['sub_task'],
+                                style: const TextStyle(color: Colors.white, fontSize: 17),
+                              ),
+                              content: Column(
+                                children: [
+                                  Table(
+                                    columnWidths: const {
+                                      0: FixedColumnWidth(100),
+                                      1: FixedColumnWidth(10),
+                                    },
+                                    children: [
+                                      TableRow(
+                                        children: [
+                                          SizedBox(
+                                            height: 35,
+                                            child: Text(
+                                              'Keterangan',
+                                              style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600, color: Colors.black),
+                                            ),
+                                          ),
+                                          Text(
+                                            ':',
                                             style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600, color: Colors.black),
                                           ),
-                                        ),
-                                        Text(
-                                          ':',
-                                          style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600, color: Colors.black),
-                                        ),
-                                        Text(
-                                          sub['keterangan'],
-                                          style: TextStyle(fontSize: 17, color: Colors.black),
-                                        ),
-                                      ],
-                                    )
-                                  ],
-                                ),
-                                const SizedBox(height: 12.0),
-                                SizedBox(
-                                  width: MediaQuery.of(context).size.width,
-                                  child: ElevatedButton(
-                                    onPressed: sub['is_aktif'] == 1
-                                        ? () {
-                                            print(sub['id']);
-                                            fillask(sub['id']);
-                                          }
-                                        : () {},
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: sub['is_aktif'] == 1 ? Colors.teal : Color(0xFF9A1663),
-                                      maximumSize: const Size.fromHeight(50),
-                                    ),
-                                    child: Text(sub['is_aktif'] == 1 ? 'ISI TASK' : 'TASK INACTIVE',
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 16,
-                                        )),
+                                          Text(
+                                            sub['keterangan'],
+                                            style: TextStyle(fontSize: 17, color: Colors.black),
+                                          ),
+                                        ],
+                                      )
+                                    ],
                                   ),
-                                ),
-                              ],
+                                  const SizedBox(height: 12.0),
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width,
+                                    child: ElevatedButton(
+                                      onPressed: sub['is_aktif'] == 1
+                                          ? () {
+                                              print(sub['id']);
+                                              fillask(sub['id']);
+                                            }
+                                          : () {},
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: sub['is_aktif'] == 1 ? Colors.teal : Color(0xFF9A1663),
+                                        maximumSize: const Size.fromHeight(50),
+                                      ),
+                                      child: Text(sub['is_aktif'] == 1 ? 'ISI TASK' : 'TASK INACTIVE',
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16,
+                                          )),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ),
-            SliverFillRemaining(
-              hasScrollBody: false,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: CustomButtonSave(
-                      onPressed: compareList.length == isiTask.length
-                          ? () {
-                              save();
-                            }
-                          : () {},
-                      text: compareList.length == isiTask.length ? 'Simpan' : 'Data ${isiTask.length} dari ${compareList.length}',
-                      icon: compareList.length == isiTask.length
-                          ? Icon(FontAwesomeIcons.check, color: Colors.white, size: 17)
-                          : Icon(FontAwesomeIcons.close, color: Colors.white, size: 17),
+                          ],
+                        );
+                      },
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            )
-          ],
-        ),
-      ),
+              SliverFillRemaining(
+                hasScrollBody: false,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: CustomButtonSave(
+                        onPressed: compareList.length == isiTask.length
+                            ? status == true ?() {
+                                save();
+                              } :(){
+                                saveOffline();
+                              }
+                            : () {},
+                        text: compareList.length == isiTask.length ? 'Simpan' : 'Data ${isiTask.length} dari ${compareList.length}',
+                        icon: compareList.length == isiTask.length
+                            ? Icon(FontAwesomeIcons.check, color: Colors.white, size: 17)
+                            : Icon(FontAwesomeIcons.close, color: Colors.white, size: 17),
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+        );
+      }),
     );
   }
 }

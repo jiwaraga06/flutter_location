@@ -8,6 +8,7 @@ class CheckInternetCubit extends Cubit<CheckInternetState> {
   CheckInternetCubit() : super(CheckInternetInitial());
 
   void checkInternet() {
+        // emit(CheckInternetStatus(status: false, valStatus: 'None'));
     Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
       // whenevery connection status is changed.
       print('Status Koneksi: $result');

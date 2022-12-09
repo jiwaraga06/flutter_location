@@ -14,9 +14,13 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<CheckInternetCubit>(context).checkInternet();
+  }
+  @override
   Widget build(BuildContext context) {
   BlocProvider.of<AuthCubit>(context).splash(context);
-  BlocProvider.of<CheckInternetCubit>(context).checkInternet();
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(

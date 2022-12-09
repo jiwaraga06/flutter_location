@@ -18,7 +18,7 @@ class CheckpointListCubit extends Cubit<CheckpointListState> {
     myReposity!.checkpoint().then((value) async {
       var json = jsonDecode(value.body);
       var statusCode = value.statusCode;
-      // print('Checkpoint: $json');
+      print('Checkpoint: $json');
       emit(CheckpointListLoaded(statusCode: statusCode, json: json));
       json.forEach((e) async {
         await SQLHelper.insertLokasi(
@@ -37,6 +37,13 @@ class CheckpointListCubit extends Cubit<CheckpointListState> {
   void checkpointOffline() {
     emit(CheckpointListLoading());
     Future join = SQLHelper.getLokasiTaskSubtask();
+    join.then((value) {
+      emit(CheckpointListLoaded(statusCode: 200, json: value));
+    });
+  }
+  void checkpointOfflineByLokal() {
+    emit(CheckpointListLoading());
+    Future join = SQLHelper.getLokasiTaskSubtaskByLokal();
     join.then((value) {
       emit(CheckpointListLoaded(statusCode: 200, json: value));
     });

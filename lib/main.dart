@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_location/locationTest.dart';
+import 'package:flutter_location/source/data/AbsenLokal/cubit/absen_lokal_cubit.dart';
 import 'package:flutter_location/source/data/Auth/cubit/auth_cubit.dart';
 import 'package:flutter_location/source/data/Auth/cubit/ganti_password_cubit.dart';
 import 'package:flutter_location/source/data/CheckInternet/cubit/check_internet_cubit.dart';
@@ -147,6 +148,7 @@ class _MyAppsState extends State<MyApps> {
       Future lokasi = SQLHelper.createTables(database);
       Future tasks = SQLHelper.createTableTask(database);
       Future sub_task = SQLHelper.createTableSubTask(database);
+      Future history = SQLHelper.createTableHistory(database);
       // Future join = SQLHelper.getLokasiTaskSubtask();
     });
   }
@@ -164,6 +166,9 @@ class _MyAppsState extends State<MyApps> {
       providers: [
         BlocProvider(
           create: (checkinternetcubit) => CheckInternetCubit(),
+        ),
+        BlocProvider(
+          create: (checkinternetcubit) => AbsenLokalCubit(),
         ),
         BlocProvider(
           create: (mqttcubit) => MqttCubit(myReposity: myReposity),

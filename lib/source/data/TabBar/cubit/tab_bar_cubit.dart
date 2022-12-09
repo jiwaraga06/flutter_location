@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_background/flutter_background.dart';
+import 'package:flutter_location/source/data/Offline/Sql/sql.dart';
 import 'package:location/location.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:bloc/bloc.dart';
@@ -15,7 +17,7 @@ class TabBarCubit extends Cubit<TabBarState> {
   TabBarCubit({required this.myReposity}) : super(TabBarInitial());
   IO.Socket socket = IO.io('https://api2.sipatex.co.id:2053', <String, dynamic>{
     "transports": ["websocket"],
-    "autoConnect": true
+    "autoConnect": false
   });
   Location location = Location();
   bool? _serviceEnabled;
@@ -41,6 +43,7 @@ class TabBarCubit extends Cubit<TabBarState> {
   }
 
   void socketConnect() async {
+    final db = await SQLHelper.db();
     SharedPreferences pref = await SharedPreferences.getInstance();
     var barcode = pref.getString('barcode');
     var nama = pref.getString('nama');
@@ -73,7 +76,7 @@ class TabBarCubit extends Cubit<TabBarState> {
     _locationData = await location.getLocation();
     if (barcode != null) {
       location.isBackgroundModeEnabled();
-      location.changeNotificationOptions(title: 'Push', channelName: 'Notif',subtitle: 'subtitle');
+      location.changeNotificationOptions(title: 'Push', channelName: 'Notif', subtitle: 'subtitle');
       location.enableBackgroundMode(enable: true);
       location.onLocationChanged.listen((LocationData currentLocation) async {
         // print(currentLocation);
@@ -88,26 +91,42 @@ class TabBarCubit extends Cubit<TabBarState> {
           'waktu': DateTime.now().toString()
         });
         //
-        listHistory.add({
-          "barcode": barcode,
-          "nama": nama,
-          "lat": currentLocation.latitude,
-          "lng": currentLocation.longitude,
-          "warna": warna,
-          "gender": gender,
-          'waktu': DateTime.now().toString()
-        });
-        var body = {'data_lokasi': listHistory.toList()};
+        await SQLHelper.insertHistory(barcode, nama, currentLocation.latitude, currentLocation.longitude, warna, gender, DateTime.now().toString());
+        final result = await db.query('history');
+        // print(result.length);
+
+        var body = {
+          'data_lokasi': result.map((e) {
+            var a = {
+              "barcode": e['barcode'],
+              "nama": e['nama'],
+              "lat": e['lat'],
+              "lng": e['lng'],
+              "warna": e['warna'],
+              "gender": e['gender'],
+              'waktu': e['waktu']
+            };
+            return a;
+          }).toList()
+        };
         var encode = jsonEncode(body);
         // print(encode);
-        if (listHistory.length >= 10) {
-          myReposity!.postHistoryLokasiSecurity(encode).then((value) {
-            var json = jsonDecode(value.body);
-            var statusCode = value.statusCode;
-            if (statusCode == 200) {
-              listHistory.clear();
+        if (result.length >= 20) {
+          Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+            // whenevery connection status is changed.
+            print('Status Koneksi: $result');
+            if (result != ConnectivityResult.none) {
+              myReposity!.postHistoryLokasiSecurity(encode).then((value) async {
+                var json = jsonDecode(value.body);
+                var statusCode = value.statusCode;
+                if (statusCode == 200) {
+                  await SQLHelper.deleteHistory();
+                } else if (json == 'Holding') {
+                  print('di holding');
+                }
+                // print('MSG POST HISTORY: $json');
+              });
             }
-            // print('MSG POST HISTORY: $json');
           });
         }
       });
@@ -144,12 +163,9 @@ class TabBarCubit extends Cubit<TabBarState> {
       //   print("o");
       // });
       FlutterBackground.isBackgroundExecutionEnabled;
-      if (backgroundExecution) {
-        
-      }
+      if (backgroundExecution) {}
     } else {
       print('not granted');
     }
   }
-  
 }

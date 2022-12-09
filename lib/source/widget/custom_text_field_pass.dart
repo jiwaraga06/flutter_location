@@ -25,7 +25,7 @@ class CustomTextFielPass extends StatelessWidget {
     return TextFormField(
       controller: controller,
       cursorColor: Color(0xFF0D4C92),
-      style: GoogleFonts.lato(),
+      style: GoogleFonts.lato(fontSize: 17,fontWeight: FontWeight.w600,),
       obscureText: iconPass!,
       decoration: InputDecoration(
         hintText: hint,
@@ -41,7 +41,10 @@ class CustomTextFielPass extends StatelessWidget {
         labelStyle: GoogleFonts.lato(
           color: Color(0xFF0D4C92),
         ),
-        hintStyle: GoogleFonts.lato(),
+        hintStyle: GoogleFonts.lato(
+          fontSize: 17,
+          fontWeight: FontWeight.w600,
+        ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16.0),
           borderSide: BorderSide(

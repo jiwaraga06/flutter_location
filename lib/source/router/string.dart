@@ -17,3 +17,7 @@ const EDIT_TASK = "/dashboard/edit_task";
 // SUB TASK
 const ADD_SUB_TASK = "dashboard/add_sub_task";
 const EDIT_SUB_TASK = "dashboard/edit_sub_task";
+// CHECKPOINT LOKAL
+const CHECKPOINT_LOKAL = "dashboard/checkpoint_lokal";
+// ABSEN LOKAL
+const ABSEN_LOKAL = "dashboard/absen_lokal";

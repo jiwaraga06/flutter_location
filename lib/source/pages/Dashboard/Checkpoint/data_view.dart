@@ -65,7 +65,7 @@ class _DataViewState extends State<DataView> with SingleTickerProviderStateMixin
             return Container();
           }
           var status = (state as CheckInternetStatus).status;
-          if(status == true){
+          if (status == true) {
             BlocProvider.of<CheckpointListCubit>(context).checkpoint();
           } else {
             BlocProvider.of<CheckpointListCubit>(context).checkpointOffline();
@@ -88,7 +88,11 @@ class _DataViewState extends State<DataView> with SingleTickerProviderStateMixin
               if (data.isEmpty) {
                 return InkWell(
                   onTap: () {
-                    BlocProvider.of<CheckpointListCubit>(context).checkpoint();
+                    if (status == true) {
+                      BlocProvider.of<CheckpointListCubit>(context).checkpoint();
+                    } else {
+                      BlocProvider.of<CheckpointListCubit>(context).checkpointOffline();
+                    }
                   },
                   child: Container(
                     alignment: Alignment.center,
@@ -105,7 +109,11 @@ class _DataViewState extends State<DataView> with SingleTickerProviderStateMixin
               return SmartRefresher(
                 controller: _refreshController,
                 onRefresh: () {
-                  BlocProvider.of<CheckpointListCubit>(context).checkpoint();
+                  if(status == true){
+            BlocProvider.of<CheckpointListCubit>(context).checkpoint();
+          } else {
+            BlocProvider.of<CheckpointListCubit>(context).checkpointOffline();
+          }
                 },
                 child: ListView.builder(
                     // shrinkWrap: true,
@@ -195,6 +203,7 @@ class _DataViewState extends State<DataView> with SingleTickerProviderStateMixin
                                                 openAndCloseAnimation: true,
                                                 headerBackgroundColor: const Color(0XFF3E6D9C),
                                                 contentBorderColor: const Color(0XFF3E6D9C),
+                                                
                                                 leftIcon: IconButton(
                                                     onPressed: () {
                                                       print(b['id']);
@@ -208,7 +217,7 @@ class _DataViewState extends State<DataView> with SingleTickerProviderStateMixin
                                                       Icons.edit,
                                                       color: Colors.white,
                                                     )),
-                                                headerPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                                                headerPadding: const EdgeInsets.symmetric(vertical: 2, horizontal: 4),
                                                 children: [
                                                   AccordionSection(
                                                       header: Text(

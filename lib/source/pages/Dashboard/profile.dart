@@ -5,11 +5,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_location/source/data/Auth/cubit/auth_cubit.dart';
+import 'package:flutter_location/source/data/CheckInternet/cubit/check_internet_cubit.dart';
 import 'package:flutter_location/source/data/Mqtt/cubit/mqtt_cubit.dart';
 import 'package:flutter_location/source/data/TabBar/cubit/tab_bar_cubit.dart';
 import 'package:flutter_location/source/router/string.dart';
 import 'package:flutter_location/source/widget/custom_btnLogout.dart';
 import 'package:flutter_location/source/widget/custom_loading.dart';
+import 'package:flutter_location/source/widget/status_koneksi.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class Profile extends StatefulWidget {
@@ -32,6 +34,17 @@ class _ProfileState extends State<Profile> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profile'),
+        actions: [
+          BlocBuilder<CheckInternetCubit, CheckInternetState>(
+            builder: (context, state) {
+              if (state is CheckInternetStatus == false) {
+                return Container();
+              }
+              var status = (state as CheckInternetStatus).status;
+              return CustomStatusKoneksi(color: status == false ? Colors.red[600] : Colors.green);
+            },
+          ),
+        ],
       ),
       body: BlocListener<AuthCubit, AuthState>(
         listener: (context, state) async {
@@ -176,6 +189,28 @@ class _ProfileState extends State<Profile> {
                                           },
                                           child: Text("Kirim Berita")),
                                     ),
+                                    const SizedBox(height: 8),
+                                    SizedBox(
+                                      width: MediaQuery.of(context).size.width,
+                                      child: ElevatedButton(
+                                        onPressed: () {
+                                          Navigator.pushNamed(context, CHECKPOINT_LOKAL);
+                                        },
+                                        style: ElevatedButton.styleFrom(backgroundColor: Colors.deepPurple),
+                                        child: Text('Checkpoint Offline'),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    SizedBox(
+                                      width: MediaQuery.of(context).size.width,
+                                      child: ElevatedButton(
+                                        onPressed: () {
+                                          Navigator.pushNamed(context, ABSEN_LOKAL);
+                                        },
+                                        style: ElevatedButton.styleFrom(backgroundColor: Colors.teal),
+                                        child: Text('Absen Checkpoint Offline'),
+                                      ),
+                                    ),
                                   ],
                                 ),
                               )
@@ -199,11 +234,29 @@ class _ProfileState extends State<Profile> {
                                                   },
                                                   child: Text("Kirim Berita")),
                                             ),
+                                            const SizedBox(height: 8),
+                                            SizedBox(
+                                              width: MediaQuery.of(context).size.width,
+                                              child: ElevatedButton(
+                                                onPressed: () {},
+                                                style: ElevatedButton.styleFrom(backgroundColor: Colors.deepPurple),
+                                                child: Text('Checkpoint Offline'),
+                                              ),
+                                            ),
                                           ],
                                         ),
                                       )
-                                    : Container()
-                                : Container()
+                                    : SizedBox(
+                                        width: MediaQuery.of(context).size.width,
+                                        child: ElevatedButton(
+                                          onPressed: () {},
+                                          style: ElevatedButton.styleFrom(backgroundColor: Colors.teal),
+                                          child: Text('Absen Checkpoint Offline'),
+                                        ),
+                                      )
+                                : Container(),
+                        const SizedBox(height: 8),
+                        const Divider(thickness: 2),
                       ],
                     ),
                   ),
@@ -213,6 +266,15 @@ class _ProfileState extends State<Profile> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
+                      const SizedBox(height: 8),
+                      Text(
+                        '''CATATAN: Jika Sudah Selesai Mengerjakan Tugas, 
+Silahkan Hapus Aplikasi Security Point di Riwayat Aplikasi, 
+Tidak Perlu Logout Akun
+                      ''',
+                        style: TextStyle(color: Colors.grey, fontSize: 15),
+                      ),
+                      const SizedBox(height: 8),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: CustomButtonLogout(

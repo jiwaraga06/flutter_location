@@ -13,7 +13,7 @@ class HomeCubit extends Cubit<HomeState> {
   //SOCKet IO CLIENT
   IO.Socket socket = IO.io('https://api2.sipatex.co.id:2053', <String, dynamic>{
     "transports": ["websocket"],
-    "autoConnect": true
+    "autoConnect": false
   });
 
   void connectSocket() {
@@ -30,8 +30,8 @@ class HomeCubit extends Cubit<HomeState> {
     });
     socket.on('connect_error', (data) {
       emit(HomeLoaded(status: 'connect error', statusCode: 2));
-      print("connect error home");
-      print(data);
+      // print("connect error home");
+      // print(data);
     });
     socket.on('disconnect', (data) {
       emit(HomeLoaded(status: 'disconnect', statusCode: 3));

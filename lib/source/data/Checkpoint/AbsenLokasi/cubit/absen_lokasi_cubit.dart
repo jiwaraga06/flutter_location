@@ -46,4 +46,37 @@ class AbsenLokasiCubit extends Cubit<AbsenLokasiState> {
       print('Error Get Current Position: $onError');
     });
   }
+
+  void postAbsenLokasiOffline(id_lokasi, nama_task, tasks) async {
+    var tanggal = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    var jam = DateFormat('HH:mm:ss').format(DateTime.now());
+    var list = [];
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    var barcode = pref.getString('barcode');
+    var dataLokal = pref.getString('datalokal');
+    if (dataLokal != null) {
+      var result = jsonDecode(dataLokal);
+      list.add(result[0]);
+    }
+    emit(AbsenLokasiloading());
+    await Geolocator.getCurrentPosition().then((value) async {
+      var body = {
+        'tgl_absen': '$tanggal $jam',
+        'barcode': '$barcode',
+        'id_lokasi': id_lokasi,
+        'nama_task': nama_task,
+        'lati': '${value.latitude}',
+        'longi': '${value.longitude}',
+        'id_sync': null,
+        'tasks': tasks,
+      };
+      print('BODY: $body');
+      list.add(body);
+      await Future.delayed(Duration(seconds: 1));
+      pref.setString('datalokal', jsonEncode(list));
+      emit(AbsenLokasiloaded(json: {'message': 'Berhasil di simpan'}, statusCode: 200));
+    }).catchError((onError) {
+      print('Error Get Current Position: $onError');
+    });
+  }
 }

@@ -9,7 +9,9 @@ import 'package:flutter_location/source/pages/Dashboard/Checkpoint/SubTask/addSu
 import 'package:flutter_location/source/pages/Dashboard/Checkpoint/SubTask/editSubtask.dart';
 import 'package:flutter_location/source/pages/Dashboard/Checkpoint/Task/addTask.dart';
 import 'package:flutter_location/source/pages/Dashboard/Checkpoint/Task/editTask.dart';
+import 'package:flutter_location/source/pages/Dashboard/Checkpoint/checkpoint_offline.dart';
 import 'package:flutter_location/source/pages/Dashboard/absenCheckpoint.dart';
+import 'package:flutter_location/source/pages/Dashboard/absen_lokal_satpam.dart';
 import 'package:flutter_location/source/pages/Dashboard/bottom_navbar/bottom_navbar.dart';
 import 'package:flutter_location/source/pages/Dashboard/Checkpoint/checkpoint.dart';
 import 'package:flutter_location/source/pages/Dashboard/history.dart';
@@ -54,6 +56,11 @@ class RouterNavigation {
       case ABSEN_SATPAM:
         final data = settings.arguments;
         return MaterialPageRoute(builder: (context) => AbsenCheckpoint(data: data));
+        // LOKAL
+      case CHECKPOINT_LOKAL:
+        return MaterialPageRoute(builder: (context) => const CheckPointOffline());
+      case ABSEN_LOKAL:
+        return MaterialPageRoute(builder: (context) => const AbsenLokalSatpam());
       //LOKASI
       case CHECKPOINT:
         return MaterialPageRoute(builder: (context) => const Checkpoint());

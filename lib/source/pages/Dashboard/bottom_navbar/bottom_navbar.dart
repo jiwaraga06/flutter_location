@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_location/source/data/Checkpoint/DataCheckpoint/cubit/checkpoint_list_cubit.dart';
 import 'package:flutter_location/source/data/Radius/cubit/radius_cubit.dart';
 import 'package:flutter_location/source/data/TabBar/cubit/tab_bar_cubit.dart';
 import 'package:flutter_location/source/pages/Dashboard/Checkpoint/checkpoint.dart';
@@ -46,6 +47,7 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
     BlocProvider.of<TabBarCubit>(context).getInfoAll();
     BlocProvider.of<TabBarCubit>(context).socketConnect();
     BlocProvider.of<RadiusCubit>(context).getRadius();
+    BlocProvider.of<CheckpointListCubit>(context).checkpoint();
   }
 
   @override

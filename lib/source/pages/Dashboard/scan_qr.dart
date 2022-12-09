@@ -2,15 +2,18 @@ import 'dart:convert';
 
 import 'package:accordion/accordion.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_location/source/data/CheckInternet/cubit/check_internet_cubit.dart';
 import 'package:flutter_location/source/data/Radius/cubit/distance_cubit.dart';
 import 'package:flutter_location/source/router/string.dart';
 import 'package:flutter_location/source/widget/custom_loading.dart';
 import 'package:flutter_location/source/widget/custom_notefield.dart';
+import 'package:flutter_location/source/widget/status_koneksi.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -36,12 +39,19 @@ class _ScanQRState extends State<ScanQR> {
     }
     if (!mounted) return;
     print(barcodeScanRes);
-    setState(() {
+    setState(() async {
       result = stringToBase64.decode(barcodeScanRes);
       id_lokasi = int.parse(result!.split(';')[0]);
       latQr = double.parse(result!.split(';')[1]);
       longQr = double.parse(result!.split(';')[2]);
-      BlocProvider.of<DistanceCubit>(context).hitungJarak(id_lokasi, latQr, longQr);
+      var connectivityResult = await (Connectivity().checkConnectivity());
+      if (connectivityResult == ConnectivityResult.mobile) {
+        BlocProvider.of<DistanceCubit>(context).hitungJarak(id_lokasi, latQr, longQr, true);
+      } else if (connectivityResult == ConnectivityResult.wifi) {
+        BlocProvider.of<DistanceCubit>(context).hitungJarak(id_lokasi, latQr, longQr, true);
+      } else if (connectivityResult == ConnectivityResult.none) {
+        BlocProvider.of<DistanceCubit>(context).hitungJarak(id_lokasi, latQr, longQr, false);
+      }
     });
   }
 
@@ -56,6 +66,18 @@ class _ScanQRState extends State<ScanQR> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Absen Security'),
+        actions: [
+          BlocBuilder<CheckInternetCubit, CheckInternetState>(
+            builder: (context, state) {
+              if (state is CheckInternetStatus == false) {
+                return Container();
+              }
+              var status = (state as CheckInternetStatus).status;
+
+              return CustomStatusKoneksi(color: status == false ? Colors.red[600] : Colors.green);
+            },
+          ),
+        ],
       ),
       body: ListView(
         shrinkWrap: true,

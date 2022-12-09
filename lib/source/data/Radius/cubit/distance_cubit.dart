@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
+import 'package:flutter_location/source/data/Offline/Sql/sql.dart';
 import 'package:flutter_location/source/data/repository/repository.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:meta/meta.dart';
@@ -12,35 +13,50 @@ class DistanceCubit extends Cubit<DistanceState> {
   final MyReposity? myReposity;
   DistanceCubit({required this.myReposity}) : super(DistanceInitial());
 
-  void hitungJarak(id_lokasi,latQr, longQr) async {
+  void hitungJarak(id_lokasi, latQr, longQr, isOffline) async {
     emit(DistanceLoading());
+    print('Is OFFLINE: $isOffline');
     SharedPreferences pref = await SharedPreferences.getInstance();
-    myReposity!.getRadius().then((value) async {
-      var json = jsonDecode(value.body);
-      pref.setInt('radius', json['radius']);
-      var statusCode = value.statusCode;
-      print('JSON RADIUS: $json');
-      await Geolocator.getCurrentPosition().then((value) {
-        print('LatQr: $latQr - LongQr: $longQr');
-        print('My Position: $value');
-        var valueDistance = Geolocator.distanceBetween(
-          latQr!,
-          longQr!,
-          value.latitude,
-          value.longitude,
-        );
-        // if (valueDistance <= json['radius']) {
+    var radius = pref.getInt('radius');
+    await Geolocator.getCurrentPosition().then((value) {
+      print('LatQr: $latQr - LongQr: $longQr');
+      print('My Position: $value');
+      var valueDistance = Geolocator.distanceBetween(
+        latQr!,
+        longQr!,
+        value.latitude,
+        value.longitude,
+      );
+      if (isOffline == true) {
+        myReposity!.getRadius().then((value) async {
+          var json = jsonDecode(value.body);
+          pref.setInt('radius', json['radius']);
+          var radius = pref.getInt('radius');
+          var statusCode = value.statusCode;
+          print('JSON RADIUS: $json');
+
+          if (valueDistance <= json['radius']) {
+            print('Dekat');
+            emit(DistanceLoaded(data: {'jarak': valueDistance, 'status': 1}));
+            getTaskByLokasi(id_lokasi);
+          } else {
+            print('Jauh');
+            emit(DistanceLoaded(data: {'jarak': valueDistance, 'status': 0}));
+          }
+        });
+      } else if (isOffline == false) {
+        if (valueDistance <= radius!) {
           print('Dekat');
           emit(DistanceLoaded(data: {'jarak': valueDistance, 'status': 1}));
-          getTaskByLokasi(id_lokasi);
-        // } else {
-        //   print('Jauh');
-        //   emit(DistanceLoaded(data: {'jarak': valueDistance, 'status': 0}));
-        // }
-        print('Jarak: $valueDistance');
-      }).catchError((e) {
-        print('Error Get Current Position: $e');
-      });
+          getTaskByLokasiLokal(id_lokasi);
+        } else {
+          print('Jauh');
+          emit(DistanceLoaded(data: {'jarak': valueDistance, 'status': 0}));
+        }
+      }
+      print('Jarak: $valueDistance');
+    }).catchError((e) {
+      print('Error Get Current Position: $e');
     });
   }
 
@@ -51,6 +67,16 @@ class DistanceCubit extends Cubit<DistanceState> {
       var statusCode = value.statusCode;
       print('JSON TASK by id: $json');
       emit(AbsenSecurityLoaded(data: json, statusCode: statusCode));
+    });
+  }
+
+  void getTaskByLokasiLokal(id_lokasi) async {
+    emit(AbsenSecurityLoading());
+    Future history =  SQLHelper.getLokasiByID(id_lokasi);
+    history.then((value) {
+      print('value');
+      print(value);
+      emit(AbsenSecurityLoaded(data: value, statusCode: 200));
     });
   }
 }
