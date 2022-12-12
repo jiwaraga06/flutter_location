@@ -168,4 +168,46 @@ class TabBarCubit extends Cubit<TabBarState> {
       print('not granted');
     }
   }
+
+  void permissionCheck() async {
+    print('Background');
+     LocationData _locationData;
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled!) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled!) {
+        return;
+      }
+    }
+
+    _permissionGranted = await location.hasPermission();
+    if (_permissionGranted == PermissionStatus.denied) {
+      _permissionGranted = await location.requestPermission();
+      if (_permissionGranted != PermissionStatus.granted) {
+        print('granted');
+
+        return;
+      }
+    }
+    var hasPermissions = await FlutterBackground.hasPermissions;
+    final androidConfig = FlutterBackgroundAndroidConfig(
+      notificationTitle: "Security Point",
+      notificationText: "Background notification for keeping the example app running in the background",
+      notificationImportance: AndroidNotificationImportance.High,
+      notificationIcon: AndroidResource(name: 'background_icon', defType: 'drawable'), // Default is ic_launcher from folder mipmap
+    );
+    hasPermissions = await FlutterBackground.initialize(androidConfig: androidConfig);
+    print(hasPermissions);
+    if (hasPermissions) {
+      final backgroundExecution = await FlutterBackground.enableBackgroundExecution();
+      print('granted');
+      // Timer.periodic(Duration(seconds: 2), (timer) {
+      //   print("o");
+      // });
+      FlutterBackground.isBackgroundExecutionEnabled;
+      if (backgroundExecution) {}
+    } else {
+      print('not granted');
+    }
+  }
 }

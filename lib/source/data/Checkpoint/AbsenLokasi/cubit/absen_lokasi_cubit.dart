@@ -79,4 +79,25 @@ class AbsenLokasiCubit extends Cubit<AbsenLokasiState> {
       print('Error Get Current Position: $onError');
     });
   }
+
+  void uploadServerAbsenLokasi(data) async {
+    var tanggal = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    var jam = DateFormat('HH:mm:ss').format(DateTime.now());
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    var barcode = pref.getString('barcode');
+    emit(AbsenLokasiloading());
+    var body = {'data': data};
+    var encode = jsonEncode(body);
+    print('BODY: ${encode}');
+    myReposity!.postAbsenLokasi(encode).then((value) {
+      var json = jsonDecode(value.body);
+      var statusCode = value.statusCode;
+      if(statusCode == 200){
+        pref.setString('datalokal', jsonEncode([]));
+      }
+      print('JSON UPLOAD ABSEN code: $statusCode');
+      print('JSON UPLOAD ABSEN: $json');
+      emit(AbsenLokasiloaded(json: json, statusCode: statusCode));
+    });
+  }
 }

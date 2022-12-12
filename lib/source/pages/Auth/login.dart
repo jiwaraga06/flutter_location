@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_location/source/data/Auth/cubit/auth_cubit.dart';
+import 'package:flutter_location/source/data/TabBar/cubit/tab_bar_cubit.dart';
 import 'package:flutter_location/source/router/string.dart';
 import 'package:flutter_location/source/widget/custom_banner.dart';
 import 'package:flutter_location/source/widget/custom_button.dart';
@@ -53,6 +54,7 @@ class _LoginState extends State<Login> {
   @override
   void initState() {
     super.initState();
+    BlocProvider.of<TabBarCubit>(context).permissionCheck();
     _getId();
   }
 

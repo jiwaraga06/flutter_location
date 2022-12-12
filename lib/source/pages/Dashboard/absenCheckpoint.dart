@@ -267,11 +267,24 @@ class _AbsenCheckpointState extends State<AbsenCheckpoint> {
   }
 
   void save() {
+    print(isiTask.length);
+    if (isiTask.isEmpty) {
+      final materialBanner = MyBanner.bannerFailed('Data Masih Kosong');
+      ScaffoldMessenger.of(context)
+        ..hideCurrentMaterialBanner()
+        ..showMaterialBanner(materialBanner);
+    }
     BlocProvider.of<AbsenLokasiCubit>(context).postAbsenLokasi(widget.data['id_lokasi'], isiTask.toList());
   }
 
   void saveOffline() {
     print('save offline');
+    if (isiTask.isEmpty) {
+      final materialBanner = MyBanner.bannerFailed('Data Masih Kosong');
+      ScaffoldMessenger.of(context)
+        ..hideCurrentMaterialBanner()
+        ..showMaterialBanner(materialBanner);
+    }
     BlocProvider.of<AbsenLokasiCubit>(context).postAbsenLokasiOffline(widget.data['id_lokasi'], widget.data['task'], isiTask.toList());
   }
 
@@ -476,17 +489,15 @@ class _AbsenCheckpointState extends State<AbsenCheckpoint> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: CustomButtonSave(
-                        onPressed: compareList.length == isiTask.length
-                            ? status == true ?() {
-                                save();
-                              } :(){
-                                saveOffline();
-                              }
-                            : () {},
-                        text: compareList.length == isiTask.length ? 'Simpan' : 'Data ${isiTask.length} dari ${compareList.length}',
-                        icon: compareList.length == isiTask.length
-                            ? Icon(FontAwesomeIcons.check, color: Colors.white, size: 17)
-                            : Icon(FontAwesomeIcons.close, color: Colors.white, size: 17),
+                        onPressed: status == true
+                                ? () {
+                                    save();
+                                  }
+                                : () {
+                                    saveOffline();
+                                  },
+                        text: 'SIMPAN',
+                        icon: Icon(FontAwesomeIcons.check, color: Colors.white, size: 17),
                       ),
                     ),
                   ],

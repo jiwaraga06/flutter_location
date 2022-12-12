@@ -9,6 +9,7 @@ import 'package:flutter_location/source/data/CheckInternet/cubit/check_internet_
 import 'package:flutter_location/source/data/Mqtt/cubit/mqtt_cubit.dart';
 import 'package:flutter_location/source/data/TabBar/cubit/tab_bar_cubit.dart';
 import 'package:flutter_location/source/router/string.dart';
+import 'package:flutter_location/source/widget/custom_banner.dart';
 import 'package:flutter_location/source/widget/custom_btnLogout.dart';
 import 'package:flutter_location/source/widget/custom_loading.dart';
 import 'package:flutter_location/source/widget/status_koneksi.dart';
@@ -56,253 +57,272 @@ class _ProfileState extends State<Profile> {
             var statusCode = state.statusCode;
           }
         },
-        child: BlocBuilder<TabBarCubit, TabBarState>(
-          builder: (context, state) {
-            if (state is TabBarLoading) {
-              return Container(
-                alignment: Alignment.center,
-                child: const CupertinoActivityIndicator(),
-              );
-            }
-            if (state is TabBarLoaded == false) {
-              return Container(
-                alignment: Alignment.center,
-                child: const Text('data false'),
-              );
-            }
-            var data = (state as TabBarLoaded).data;
-            var role = jsonDecode((state as TabBarLoaded).user_roles);
-            // var role = ['security'];
-            if (data == null) {
-              return Container(
-                alignment: Alignment.center,
-                child: const Text('Data kosong'),
-              );
-            }
-            return CustomScrollView(
-              slivers: [
-                SliverToBoxAdapter(
-                  child: Container(
-                    margin: const EdgeInsets.all(8.0),
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: 50),
-                        Center(
-                          child: Icon(FontAwesomeIcons.circleUser, size: 65, color: Colors.grey[700]),
-                        ),
-                        const SizedBox(height: 12),
-                        const Divider(thickness: 3),
-                        TextFormField(
-                          enabled: false,
-                          initialValue: data['barcode'],
-                          style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
-                          decoration: InputDecoration(
-                            prefixIcon: Icon(FontAwesomeIcons.idCardClip, color: Colors.indigo[600]),
-                            prefixIconConstraints: const BoxConstraints(minWidth: 60),
+        child: BlocBuilder<CheckInternetCubit, CheckInternetState>(builder: (context, state) {
+          if (state is CheckInternetStatus == false) {
+            return Container();
+          }
+          var status = (state as CheckInternetStatus).status;
+          return BlocBuilder<TabBarCubit, TabBarState>(
+            builder: (context, state) {
+              if (state is TabBarLoading) {
+                return Container(
+                  alignment: Alignment.center,
+                  child: const CupertinoActivityIndicator(),
+                );
+              }
+              if (state is TabBarLoaded == false) {
+                return Container(
+                  alignment: Alignment.center,
+                  child: const Text('data false'),
+                );
+              }
+              var data = (state as TabBarLoaded).data;
+              var role = jsonDecode((state as TabBarLoaded).user_roles);
+              // var role = ['admin_scr'];
+              if (data == null) {
+                return Container(
+                  alignment: Alignment.center,
+                  child: const Text('Data kosong'),
+                );
+              }
+              return CustomScrollView(
+                slivers: [
+                  SliverToBoxAdapter(
+                    child: Container(
+                      margin: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 50),
+                          Center(
+                            child: Icon(FontAwesomeIcons.circleUser, size: 65, color: Colors.grey[700]),
                           ),
-                        ),
-                        const SizedBox(height: 12),
-                        TextFormField(
-                          enabled: false,
-                          initialValue: data['nama'],
-                          style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
-                          decoration: InputDecoration(
-                            prefixIcon: Icon(FontAwesomeIcons.barcode, color: Colors.grey[700]),
-                            prefixIconConstraints: const BoxConstraints(minWidth: 60),
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        TextFormField(
-                          enabled: false,
-                          initialValue: data['gender'] == "l" ? "Pria" : "Wanita",
-                          style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
-                          decoration: InputDecoration(
-                            prefixIcon: data['gender'] == "l"
-                                ? const Icon(
-                                    FontAwesomeIcons.marsStroke,
-                                    color: Colors.blue,
-                                  )
-                                : const Icon(
-                                    FontAwesomeIcons.venus,
-                                    color: Colors.pink,
-                                  ),
-                            prefixIconConstraints: const BoxConstraints(minWidth: 60),
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        TextFormField(
-                          enabled: false,
-                          initialValue: role.toString(),
-                          style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
-                          decoration: const InputDecoration(
-                            prefixIcon: Icon(FontAwesomeIcons.list, color: Colors.black),
-                            prefixIconConstraints: BoxConstraints(minWidth: 60),
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        TextFormField(
-                          enabled: false,
-                          initialValue: data['warna'],
-                          style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
-                          decoration: InputDecoration(
-                            prefixIcon: Icon(FontAwesomeIcons.fill, color: Colors.brown[600]),
-                            prefixIconConstraints: const BoxConstraints(minWidth: 60),
-                          ),
-                        ),
-                        const SizedBox(height: 40),
-                        const Divider(thickness: 2),
-                        const SizedBox(height: 8),
-                        InkWell(
-                          onTap: () {
-                            Navigator.pushNamed(context, GANTI_PASSWORD, arguments: {'barcode': data['barcode']});
-                          },
-                          splashColor: Colors.blue[300],
-                          child: TextFormField(
+                          const SizedBox(height: 12),
+                          const Divider(thickness: 3),
+                          TextFormField(
                             enabled: false,
-                            initialValue: 'Ganti Password | Klik disini',
+                            initialValue: data['barcode'],
                             style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
                             decoration: InputDecoration(
-                              border: InputBorder.none,
-                              prefixIcon: Icon(FontAwesomeIcons.key, color: Colors.grey[700]),
+                              prefixIcon: Icon(FontAwesomeIcons.idCardClip, color: Colors.indigo[600]),
                               prefixIconConstraints: const BoxConstraints(minWidth: 60),
                             ),
                           ),
-                        ),
-                        role.length == 2
-                            ? Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  children: [
-                                    TextFormField(
-                                      controller: controllerBerita,
-                                      decoration: InputDecoration(hintText: 'Masukan Isi Berita', prefixIcon: Icon(Icons.message)),
+                          const SizedBox(height: 12),
+                          TextFormField(
+                            enabled: false,
+                            initialValue: data['nama'],
+                            style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+                            decoration: InputDecoration(
+                              prefixIcon: Icon(FontAwesomeIcons.barcode, color: Colors.grey[700]),
+                              prefixIconConstraints: const BoxConstraints(minWidth: 60),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          TextFormField(
+                            enabled: false,
+                            initialValue: data['gender'] == "l" ? "Pria" : "Wanita",
+                            style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+                            decoration: InputDecoration(
+                              prefixIcon: data['gender'] == "l"
+                                  ? const Icon(
+                                      FontAwesomeIcons.marsStroke,
+                                      color: Colors.blue,
+                                    )
+                                  : const Icon(
+                                      FontAwesomeIcons.venus,
+                                      color: Colors.pink,
                                     ),
-                                    const SizedBox(height: 8),
-                                    SizedBox(
-                                      width: MediaQuery.of(context).size.width,
-                                      child: TextButton(
-                                          style: TextButton.styleFrom(backgroundColor: Colors.blue[50]),
-                                          onPressed: () {
-                                            BlocProvider.of<MqttCubit>(context).send(controllerBerita.text);
-                                          },
-                                          child: Text("Kirim Berita")),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    SizedBox(
-                                      width: MediaQuery.of(context).size.width,
-                                      child: ElevatedButton(
-                                        onPressed: () {
-                                          Navigator.pushNamed(context, CHECKPOINT_LOKAL);
-                                        },
-                                        style: ElevatedButton.styleFrom(backgroundColor: Colors.deepPurple),
-                                        child: Text('Checkpoint Offline'),
+                              prefixIconConstraints: const BoxConstraints(minWidth: 60),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          TextFormField(
+                            enabled: false,
+                            initialValue: role.toString(),
+                            style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+                            decoration: const InputDecoration(
+                              prefixIcon: Icon(FontAwesomeIcons.list, color: Colors.black),
+                              prefixIconConstraints: BoxConstraints(minWidth: 60),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          TextFormField(
+                            enabled: false,
+                            initialValue: data['warna'],
+                            style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+                            decoration: InputDecoration(
+                              prefixIcon: Icon(FontAwesomeIcons.fill, color: Colors.brown[600]),
+                              prefixIconConstraints: const BoxConstraints(minWidth: 60),
+                            ),
+                          ),
+                          const SizedBox(height: 40),
+                          const Divider(thickness: 2),
+                          const SizedBox(height: 8),
+                          InkWell(
+                            onTap: () {
+                              Navigator.pushNamed(context, GANTI_PASSWORD, arguments: {'barcode': data['barcode']});
+                            },
+                            splashColor: Colors.blue[300],
+                            child: TextFormField(
+                              enabled: false,
+                              initialValue: 'Ganti Password | Klik disini',
+                              style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                prefixIcon: Icon(FontAwesomeIcons.key, color: Colors.grey[700]),
+                                prefixIconConstraints: const BoxConstraints(minWidth: 60),
+                              ),
+                            ),
+                          ),
+                          role.length == 2
+                              ? Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    children: [
+                                      TextFormField(
+                                        controller: controllerBerita,
+                                        decoration: InputDecoration(hintText: 'Masukan Isi Berita', prefixIcon: Icon(Icons.message)),
                                       ),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    SizedBox(
-                                      width: MediaQuery.of(context).size.width,
-                                      child: ElevatedButton(
-                                        onPressed: () {
-                                          Navigator.pushNamed(context, ABSEN_LOKAL);
-                                        },
-                                        style: ElevatedButton.styleFrom(backgroundColor: Colors.teal),
-                                        child: Text('Absen Checkpoint Offline'),
+                                      const SizedBox(height: 8),
+                                      SizedBox(
+                                        width: MediaQuery.of(context).size.width,
+                                        child: TextButton(
+                                            style: TextButton.styleFrom(backgroundColor: Colors.blue[50]),
+                                            onPressed: () {
+                                              BlocProvider.of<MqttCubit>(context).send(controllerBerita.text);
+                                            },
+                                            child: Text("Kirim Berita")),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              )
-                            : role.length == 1
-                                ? role[0] == 'admin_scr'
-                                    ? Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Column(
-                                          children: [
-                                            TextFormField(
-                                              controller: controllerBerita,
-                                              decoration: InputDecoration(hintText: 'Masukan Isi Berita', prefixIcon: Icon(Icons.message)),
-                                            ),
-                                            const SizedBox(height: 8),
-                                            SizedBox(
-                                              width: MediaQuery.of(context).size.width,
-                                              child: TextButton(
-                                                  style: TextButton.styleFrom(backgroundColor: Colors.blue[50]),
-                                                  onPressed: () {
-                                                    BlocProvider.of<MqttCubit>(context).send(controllerBerita.text);
-                                                  },
-                                                  child: Text("Kirim Berita")),
-                                            ),
-                                            const SizedBox(height: 8),
-                                            SizedBox(
-                                              width: MediaQuery.of(context).size.width,
-                                              child: ElevatedButton(
-                                                onPressed: () {},
-                                                style: ElevatedButton.styleFrom(backgroundColor: Colors.deepPurple),
-                                                child: Text('Checkpoint Offline'),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      )
-                                    : SizedBox(
+                                      const SizedBox(height: 8),
+                                      SizedBox(
                                         width: MediaQuery.of(context).size.width,
                                         child: ElevatedButton(
-                                          onPressed: () {},
+                                          onPressed: () {
+                                            Navigator.pushNamed(context, CHECKPOINT_LOKAL);
+                                          },
+                                          style: ElevatedButton.styleFrom(backgroundColor: Colors.deepPurple),
+                                          child: Text('Checkpoint Offline'),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      SizedBox(
+                                        width: MediaQuery.of(context).size.width,
+                                        child: ElevatedButton(
+                                          onPressed: () {
+                                            Navigator.pushNamed(context, ABSEN_LOKAL);
+                                          },
                                           style: ElevatedButton.styleFrom(backgroundColor: Colors.teal),
                                           child: Text('Absen Checkpoint Offline'),
                                         ),
-                                      )
-                                : Container(),
-                        const SizedBox(height: 8),
-                        const Divider(thickness: 2),
-                      ],
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              : role.length == 1
+                                  ? role[0] == 'admin_scr'
+                                      ? Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Column(
+                                            children: [
+                                              TextFormField(
+                                                controller: controllerBerita,
+                                                decoration: InputDecoration(hintText: 'Masukan Isi Berita', prefixIcon: Icon(Icons.message)),
+                                              ),
+                                              const SizedBox(height: 8),
+                                              SizedBox(
+                                                width: MediaQuery.of(context).size.width,
+                                                child: TextButton(
+                                                    style: TextButton.styleFrom(backgroundColor: Colors.blue[50]),
+                                                    onPressed: () {
+                                                      controllerBerita.clear();
+                                                      BlocProvider.of<MqttCubit>(context).send(controllerBerita.text);
+                                                    },
+                                                    child: Text("Kirim Berita")),
+                                              ),
+                                              const SizedBox(height: 8),
+                                              SizedBox(
+                                                width: MediaQuery.of(context).size.width,
+                                                child: ElevatedButton(
+                                                  onPressed: () {},
+                                                  style: ElevatedButton.styleFrom(backgroundColor: Colors.deepPurple),
+                                                  child: Text('Checkpoint Offline'),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      : SizedBox(
+                                          width: MediaQuery.of(context).size.width,
+                                          child: ElevatedButton(
+                                            onPressed: () {},
+                                            style: ElevatedButton.styleFrom(backgroundColor: Colors.teal),
+                                            child: Text('Absen Checkpoint Offline'),
+                                          ),
+                                        )
+                                  : Container(),
+                          const SizedBox(height: 8),
+                          const Divider(thickness: 2),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                SliverFillRemaining(
-                  hasScrollBody: false,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      const SizedBox(height: 8),
-                      Text(
-                        '''CATATAN: Jika Sudah Selesai Mengerjakan Tugas, 
+                  SliverFillRemaining(
+                    hasScrollBody: false,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        const SizedBox(height: 8),
+                        Text(
+                          '''CATATAN: Jika Sudah Selesai Mengerjakan Tugas, 
 Silahkan Hapus Aplikasi Security Point di Riwayat Aplikasi, 
 Tidak Perlu Logout Akun
-                      ''',
-                        style: TextStyle(color: Colors.grey, fontSize: 15),
-                      ),
-                      const SizedBox(height: 8),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: CustomButtonLogout(
-                          onPressed: () {
-                            AwesomeDialog(
-                              context: context,
-                              dialogType: DialogType.error,
-                              animType: AnimType.rightSlide,
-                              title: 'Exit Account',
-                              desc: 'Apakah Anda yakin ingin Keluar ?',
-                              btnCancelOnPress: () {},
-                              btnOkOnPress: () {
-                                BlocProvider.of<AuthCubit>(context).logout(context);
-                              },
-                            ).show();
-                          },
-                          text: 'LOGOUT',
-                          color: Colors.red[800],
-                          icon: const Icon(FontAwesomeIcons.close),
+                          ''',
+                          style: TextStyle(color: Colors.grey, fontSize: 15),
                         ),
-                      )
-                    ],
-                  ),
-                )
-              ],
-            );
-          },
-        ),
+                        const SizedBox(height: 8),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: CustomButtonLogout(
+                            onPressed: () {
+                              AwesomeDialog(
+                                context: context,
+                                dialogType: DialogType.error,
+                                animType: AnimType.rightSlide,
+                                title: 'Exit Account',
+                                desc: 'Apakah Anda yakin ingin Keluar ?',
+                                btnCancelOnPress: () {},
+                                btnOkOnPress: status == true
+                                    ? () {
+                                        BlocProvider.of<AuthCubit>(context).logout(context);
+                                      }
+                                    : () {
+                                        AwesomeDialog(
+                                          context: context,
+                                          dialogType: DialogType.error,
+                                          animType: AnimType.rightSlide,
+                                          title: 'Error',
+                                          desc: 'Maaf, Anda tidak bisa logout dalam Mode Offline',
+                                          btnCancelOnPress: () {},
+                                          btnOkOnPress: () {},
+                                        ).show();
+                                      },
+                              ).show();
+                            },
+                            text: 'LOGOUT',
+                            color: Colors.red[800],
+                            icon: const Icon(FontAwesomeIcons.close),
+                          ),
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              );
+            },
+          );
+        }),
       ),
     );
   }

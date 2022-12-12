@@ -76,7 +76,7 @@ class AuthCubit extends Cubit<AuthState> {
       print('LOGOUT code: $statusCode');
       print('LOGOUT : $json');
       if (statusCode == 200) {
-        pref.clear();
+        pref.remove('barcode');
         AwesomeDialog(
           context: context,
           dialogType: DialogType.success,

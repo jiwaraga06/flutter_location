@@ -16,7 +16,11 @@ class AbsenLokalCubit extends Cubit<AbsenLokalState> {
     var encode = jsonDecode(datalokal.toString());
     print('Data lokal');
     print(encode);
-    emit(AbsenLokalLoaded(statusCode: 200, json: encode));
+    if(encode != null){
+      emit(AbsenLokalLoaded(statusCode: 200, json: encode));
+    } else {
+      emit(AbsenLokalLoaded(statusCode: 200, json: []));
+    }
   }
 
 }

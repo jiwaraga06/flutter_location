@@ -109,11 +109,11 @@ class _DataViewState extends State<DataView> with SingleTickerProviderStateMixin
               return SmartRefresher(
                 controller: _refreshController,
                 onRefresh: () {
-                  if(status == true){
-            BlocProvider.of<CheckpointListCubit>(context).checkpoint();
-          } else {
-            BlocProvider.of<CheckpointListCubit>(context).checkpointOffline();
-          }
+                  if (status == true) {
+                    BlocProvider.of<CheckpointListCubit>(context).checkpoint();
+                  } else {
+                    BlocProvider.of<CheckpointListCubit>(context).checkpointOffline();
+                  }
                 },
                 child: ListView.builder(
                     // shrinkWrap: true,
@@ -203,7 +203,6 @@ class _DataViewState extends State<DataView> with SingleTickerProviderStateMixin
                                                 openAndCloseAnimation: true,
                                                 headerBackgroundColor: const Color(0XFF3E6D9C),
                                                 contentBorderColor: const Color(0XFF3E6D9C),
-                                                
                                                 leftIcon: IconButton(
                                                     onPressed: () {
                                                       print(b['id']);
