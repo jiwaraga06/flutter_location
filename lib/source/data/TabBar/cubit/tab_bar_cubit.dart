@@ -25,7 +25,6 @@ class TabBarCubit extends Cubit<TabBarState> {
   var listHistory = [];
 
   void getInfoAll() async {
-    emit(TabBarLoading());
     SharedPreferences pref = await SharedPreferences.getInstance();
     var barcode = pref.getString("barcode");
     var nama = pref.getString("nama");

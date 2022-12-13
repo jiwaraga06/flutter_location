@@ -261,7 +261,7 @@ class _ProfileState extends State<Profile> {
                                             child: Text('Absen Checkpoint Offline'),
                                           ),
                                         )
-                                  : Container(),
+                                  : role.length == 0?Container():Container(),
                           const SizedBox(height: 8),
                           const Divider(thickness: 2),
                         ],

@@ -32,9 +32,26 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
     FontAwesomeIcons.user,
   ];
   List<String> textIcon = ['Home', 'Checkpoint', 'QR', 'History', 'Profile'];
+  static const List<Widget> _widgetOptions0 = <Widget>[
+    Home(),
+    History(),
+    Profile(),
+  ];
   static const List<Widget> _widgetOptions = <Widget>[
     Home(),
     Checkpoint(),
+    ScanQR(),
+    History(),
+    Profile(),
+  ];
+  static const List<Widget> _widgetOptions1 = <Widget>[
+    Home(),
+    Checkpoint(),
+    History(),
+    Profile(),
+  ];
+  static const List<Widget> _widgetOptions2 = <Widget>[
+    Home(),
     ScanQR(),
     History(),
     Profile(),
@@ -52,23 +69,22 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<TabBarCubit, TabBarState>(
-      listener: (context, state) {
-        if (state is TabBarLoaded) {
-          var user_roles = jsonDecode(state.user_roles);
-          print(user_roles);
-        }
-      },
-      child: Scaffold(
-        body: _widgetOptions.elementAt(_bottomNavIndex),
-        // floatingActionButton: FloatingActionButton(
-        //   backgroundColor: const Color(0xFF27496D),
-        //   onPressed: () {
-        //     Navigator.pushNamed(context, SCAN_QR);
-        //   },
-        //   child: const Icon(FontAwesomeIcons.qrcode),
-        // ),
-        // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+    return BlocBuilder<TabBarCubit, TabBarState>(builder: (context, state) {
+      if (state is TabBarLoaded == false) {
+        return Container();
+      }
+      var user_roles = (state as TabBarLoaded).user_roles;
+      var encode = jsonDecode(user_roles);
+      // var encode = ['security'];
+      print(user_roles);
+      return Scaffold(
+        body: encode.length == 2
+            ? _widgetOptions.elementAt(_bottomNavIndex)
+            : encode.length == 1
+                ? encode[0] == 'admin_scr'
+                    ? _widgetOptions1.elementAt(_bottomNavIndex)
+                    : _widgetOptions2.elementAt(_bottomNavIndex)
+                : _widgetOptions0.elementAt(_bottomNavIndex),
         bottomNavigationBar: BottomNavigationBar(
             backgroundColor: Colors.white,
             type: BottomNavigationBarType.fixed,
@@ -82,48 +98,120 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
             selectedItemColor: Color(0XFF27496D),
             selectedLabelStyle: TextStyle(fontSize: 15, color: Color(0XFF27496D)),
             unselectedLabelStyle: TextStyle(fontSize: 14, color: Colors.grey),
-            items: [
-              BottomNavigationBarItem(
-                icon: Icon(FontAwesomeIcons.locationDot),
-                activeIcon: Icon(
-                  FontAwesomeIcons.locationDot,
-                  color: Color(0XFF27496D),
-                ),
-                label: 'Home',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(FontAwesomeIcons.listCheck),
-                activeIcon: Icon(
-                  FontAwesomeIcons.listCheck,
-                  color: Color(0XFF27496D),
-                ),
-                label: 'Checkpoint',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(FontAwesomeIcons.qrcode),
-                activeIcon: Icon(
-                  FontAwesomeIcons.qrcode,
-                  color: Color(0XFF27496D),
-                ),
-                label: 'Scan QR',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(FontAwesomeIcons.calendar),
-                activeIcon: Icon(
-                  FontAwesomeIcons.calendar,
-                  color: Color(0XFF27496D),
-                ),
-                label: 'History',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(FontAwesomeIcons.user),
-                activeIcon: Icon(
-                  FontAwesomeIcons.user,
-                  color: Color(0XFF27496D),
-                ),
-                label: 'Profile',
-              ),
-            ]),
+            items: encode.length == 2
+                ? [
+                    BottomNavigationBarItem(
+                      icon: Icon(FontAwesomeIcons.locationDot),
+                      activeIcon: Icon(
+                        FontAwesomeIcons.locationDot,
+                        color: Color(0XFF27496D),
+                      ),
+                      label: 'Home',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(FontAwesomeIcons.listCheck),
+                      activeIcon: Icon(
+                        FontAwesomeIcons.listCheck,
+                        color: Color(0XFF27496D),
+                      ),
+                      label: 'Checkpoint',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(FontAwesomeIcons.qrcode),
+                      activeIcon: Icon(
+                        FontAwesomeIcons.qrcode,
+                        color: Color(0XFF27496D),
+                      ),
+                      label: 'Scan QR',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(FontAwesomeIcons.calendar),
+                      activeIcon: Icon(
+                        FontAwesomeIcons.calendar,
+                        color: Color(0XFF27496D),
+                      ),
+                      label: 'History',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(FontAwesomeIcons.user),
+                      activeIcon: Icon(
+                        FontAwesomeIcons.user,
+                        color: Color(0XFF27496D),
+                      ),
+                      label: 'Profile',
+                    ),
+                  ]
+                : encode.length == 1
+                    ? encode[0] == 'admin_scr'
+                        ? [
+                            BottomNavigationBarItem(
+                              icon: Icon(FontAwesomeIcons.locationDot),
+                              activeIcon: Icon(
+                                FontAwesomeIcons.locationDot,
+                                color: Color(0XFF27496D),
+                              ),
+                              label: 'Home',
+                            ),
+                            BottomNavigationBarItem(
+                              icon: Icon(FontAwesomeIcons.listCheck),
+                              activeIcon: Icon(
+                                FontAwesomeIcons.listCheck,
+                                color: Color(0XFF27496D),
+                              ),
+                              label: 'Checkpoint',
+                            ),
+                            BottomNavigationBarItem(
+                              icon: Icon(FontAwesomeIcons.calendar),
+                              activeIcon: Icon(
+                                FontAwesomeIcons.calendar,
+                                color: Color(0XFF27496D),
+                              ),
+                              label: 'History',
+                            ),
+                            BottomNavigationBarItem(
+                              icon: Icon(FontAwesomeIcons.user),
+                              activeIcon: Icon(
+                                FontAwesomeIcons.user,
+                                color: Color(0XFF27496D),
+                              ),
+                              label: 'Profile',
+                            ),
+                          ]
+                        : [
+                            BottomNavigationBarItem(
+                              icon: Icon(FontAwesomeIcons.locationDot),
+                              activeIcon: Icon(
+                                FontAwesomeIcons.locationDot,
+                                color: Color(0XFF27496D),
+                              ),
+                              label: 'Home',
+                            ),
+                            BottomNavigationBarItem(
+                              icon: Icon(FontAwesomeIcons.qrcode),
+                              activeIcon: Icon(
+                                FontAwesomeIcons.qrcode,
+                                color: Color(0XFF27496D),
+                              ),
+                              label: 'Scan QR',
+                            ),
+                            BottomNavigationBarItem(
+                              icon: Icon(FontAwesomeIcons.calendar),
+                              activeIcon: Icon(
+                                FontAwesomeIcons.calendar,
+                                color: Color(0XFF27496D),
+                              ),
+                              label: 'History',
+                            ),
+                            BottomNavigationBarItem(
+                              icon: Icon(FontAwesomeIcons.user),
+                              activeIcon: Icon(
+                                FontAwesomeIcons.user,
+                                color: Color(0XFF27496D),
+                              ),
+                              label: 'Profile',
+                            ),
+                          ]
+                    : []),
         // bottomNavigationBar: AnimatedBottomNavigationBar(
         //   icons: iconList,
 
@@ -136,7 +224,7 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
         //   // rightCornerRadius: 32,
         //   onTap: (index) => setState(() => _bottomNavIndex = index),
         // ),
-      ),
-    );
+      );
+    });
   }
 }
