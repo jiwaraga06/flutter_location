@@ -21,7 +21,7 @@ class _HistoryState extends State<History> {
     final DateTimeRange? result = await showDateRangePicker(
       context: context,
       firstDate: DateTime(2021, 1, 1),
-      lastDate: DateTime(2030, 12, 31),
+      lastDate: DateTime.now(),
       currentDate: DateTime.now(),
       saveText: 'Done',
     );
@@ -175,6 +175,23 @@ class _HistoryState extends State<History> {
                                     ),
                                     Text(
                                       a['barcode'],
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                  ]),
+                                  TableRow(children: [
+                                    SizedBox(
+                                      height: 35,
+                                      child: Text(
+                                        'Absen',
+                                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                                      ),
+                                    ),
+                                    Text(
+                                      ':',
+                                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                                    ),
+                                    Text(
+                                      a['tgl_absen'],
                                       style: TextStyle(fontSize: 16),
                                     ),
                                   ]),
