@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_location/source/data/Auth/cubit/ganti_password_cubit.dart';
+import 'package:flutter_location/source/data/CheckInternet/cubit/check_internet_cubit.dart';
 import 'package:flutter_location/source/widget/custom_banner.dart';
 import 'package:flutter_location/source/widget/custom_button.dart';
 import 'package:flutter_location/source/widget/custom_loading.dart';
 import 'package:flutter_location/source/widget/custom_text_field.dart';
 import 'package:flutter_location/source/widget/custom_text_field_pass.dart';
+import 'package:flutter_location/source/widget/status_koneksi.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:marquee/marquee.dart';
@@ -51,6 +53,17 @@ class _GantiPasswordState extends State<GantiPassword> {
         appBar: AppBar(
           title: Text("Kembali"),
           elevation: 0.0,
+          actions: [
+            BlocBuilder<CheckInternetCubit, CheckInternetState>(
+              builder: (context, state) {
+                if (state is CheckInternetStatus == false) {
+                  return Container();
+                }
+                var status = (state as CheckInternetStatus).status;
+                return CustomStatusKoneksi(color: status == false ? Colors.red[600] : Colors.green);
+              },
+            ),
+          ],
         ),
         body: BlocListener<GantiPasswordCubit, GantiPasswordState>(
           listener: (context, state) async {
@@ -72,11 +85,14 @@ class _GantiPasswordState extends State<GantiPassword> {
                   ..showSnackBar(materialBanner);
                 await Future.delayed(Duration(seconds: 1));
                 Navigator.pop(context);
+              } else if (statusCode == 500) {
+                final materialBanner = MyBanner.bannerFailed("${json['message']}");
+                ScaffoldMessenger.of(context)
+                  ..hideCurrentMaterialBanner()
+                  ..showMaterialBanner(materialBanner);
               } else {
                 final materialBanner = MyBanner.bannerFailed("""${json['message']} \n 
-                ${json['errors']['barcode'][0]} \n 
-                ${json['errors']['password'][0]} \n 
-                ${json['errors']['new_password'][0]}""");
+                ${json['errors'].toString()} \n """);
                 ScaffoldMessenger.of(context)
                   ..hideCurrentMaterialBanner()
                   ..showMaterialBanner(materialBanner);

@@ -75,7 +75,7 @@ class TabBarCubit extends Cubit<TabBarState> {
     _locationData = await location.getLocation();
     if (barcode != null) {
       location.isBackgroundModeEnabled();
-      location.changeNotificationOptions(title: 'Push', channelName: 'Notif', subtitle: 'subtitle');
+      location.changeNotificationOptions(title: 'Security Point', channelName: 'Notif', subtitle: 'Tracking Location | Berjalan');
       location.enableBackgroundMode(enable: true);
       location.onLocationChanged.listen((LocationData currentLocation) async {
         // print(currentLocation);

@@ -161,9 +161,21 @@ class _ProfileState extends State<Profile> {
                           const Divider(thickness: 2),
                           const SizedBox(height: 8),
                           InkWell(
-                            onTap: () {
-                              Navigator.pushNamed(context, GANTI_PASSWORD, arguments: {'barcode': data['barcode']});
-                            },
+                            onTap: status == true
+                                ? () {
+                                    Navigator.pushNamed(context, GANTI_PASSWORD, arguments: {'barcode': data['barcode']});
+                                  }
+                                : () {
+                                    AwesomeDialog(
+                                      context: context,
+                                      dialogType: DialogType.error,
+                                      animType: AnimType.rightSlide,
+                                      title: 'Error',
+                                      desc: 'Maaf, Anda tidak bisa Ganti Password dalam Mode Offline',
+                                      btnCancelOnPress: () {},
+                                      btnOkOnPress: () {},
+                                    ).show();
+                                  },
                             splashColor: Colors.blue[300],
                             child: TextFormField(
                               enabled: false,
@@ -190,8 +202,10 @@ class _ProfileState extends State<Profile> {
                                         width: MediaQuery.of(context).size.width,
                                         child: TextButton(
                                             style: TextButton.styleFrom(backgroundColor: Colors.blue[50]),
-                                            onPressed: () {
+                                            onPressed: () async{
                                               BlocProvider.of<MqttCubit>(context).send(controllerBerita.text);
+                                              await Future.delayed(const Duration(seconds: 1));
+                                              controllerBerita.clear();
                                             },
                                             child: Text("Kirim Berita")),
                                       ),
@@ -261,7 +275,9 @@ class _ProfileState extends State<Profile> {
                                             child: Text('Absen Checkpoint Offline'),
                                           ),
                                         )
-                                  : role.length == 0?Container():Container(),
+                                  : role.length == 0
+                                      ? Container()
+                                      : Container(),
                           const SizedBox(height: 8),
                           const Divider(thickness: 2),
                         ],
