@@ -56,7 +56,7 @@ class RouterNavigation {
       case ABSEN_SATPAM:
         final data = settings.arguments;
         return MaterialPageRoute(builder: (context) => AbsenCheckpoint(data: data));
-        // LOKAL
+      // LOKAL
       case CHECKPOINT_LOKAL:
         return MaterialPageRoute(builder: (context) => const CheckPointOffline());
       case ABSEN_LOKAL:

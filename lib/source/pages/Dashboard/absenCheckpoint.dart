@@ -163,6 +163,7 @@ class _AbsenCheckpointState extends State<AbsenCheckpoint> {
                             border: OutlineInputBorder(),
                           ),
                         ),
+                        
                         const SizedBox(height: 8.0),
                         Table(
                           columnWidths: const {
@@ -218,7 +219,7 @@ class _AbsenCheckpointState extends State<AbsenCheckpoint> {
                         TextButton(
                             onPressed: () {
                               Navigator.pop(context);
-                              var input = {'sub_task_id': id_sub_task, 'photo': 'photo', 'checklist': '$values', 'note': controllerNote.text};
+                              var input = {'sub_task_id': id_sub_task, 'photo': '${base64String}', 'checklist': '$values', 'note': controllerNote.text};
                               // print(input);
                               var a = isiTask.indexWhere((element) => element.id_sub_task == id_sub_task);
                               print(a);
@@ -490,12 +491,12 @@ class _AbsenCheckpointState extends State<AbsenCheckpoint> {
                       padding: const EdgeInsets.all(8.0),
                       child: CustomButtonSave(
                         onPressed: status == true
-                                ? () {
-                                    save();
-                                  }
-                                : () {
-                                    saveOffline();
-                                  },
+                            ? () {
+                                save();
+                              }
+                            : () {
+                                saveOffline();
+                              },
                         text: 'SIMPAN',
                         icon: Icon(FontAwesomeIcons.check, color: Colors.white, size: 17),
                       ),

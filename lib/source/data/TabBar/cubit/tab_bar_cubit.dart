@@ -22,6 +22,7 @@ class TabBarCubit extends Cubit<TabBarState> {
   Location location = Location();
   bool? _serviceEnabled;
   PermissionStatus? _permissionGranted;
+  LocationData? _locationData;
   var listHistory = [];
 
   void getInfoAll() async {
@@ -53,7 +54,7 @@ class TabBarCubit extends Cubit<TabBarState> {
       print("connect");
       print(data);
     });
-    LocationData _locationData;
+
     _serviceEnabled = await location.serviceEnabled();
     if (!_serviceEnabled!) {
       _serviceEnabled = await location.requestService();
@@ -74,7 +75,6 @@ class TabBarCubit extends Cubit<TabBarState> {
 
     _locationData = await location.getLocation();
     if (barcode != null) {
-      location.isBackgroundModeEnabled();
       location.changeNotificationOptions(title: 'Security Point', channelName: 'Notif', subtitle: 'Tracking Location | Berjalan');
       location.enableBackgroundMode(enable: true);
       location.onLocationChanged.listen((LocationData currentLocation) async {

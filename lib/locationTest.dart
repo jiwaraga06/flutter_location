@@ -21,7 +21,7 @@ class _TesterLocationState extends State<TesterLocation> {
   String? _address, _dateTime;
   Location location = Location();
   StreamSubscription<LocationData>? _locationSubscription;
-  getLoc() async {
+  void getLoc() async {
     bool _serviceEnabled;
     PermissionStatus _permissionGranted;
     socket.connect();
@@ -84,7 +84,6 @@ class _TesterLocationState extends State<TesterLocation> {
   @override
   void initState() {
     super.initState();
-
     socket.connect();
     socket.on('connect', (data) {
       print("connect");
