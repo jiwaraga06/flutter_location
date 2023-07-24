@@ -12,10 +12,7 @@ import 'package:flutter_location/source/data/CheckInternet/cubit/check_internet_
 import 'package:flutter_location/source/data/Radius/cubit/distance_cubit.dart';
 import 'package:flutter_location/source/router/string.dart';
 import 'package:flutter_location/source/widget/custom_loading.dart';
-import 'package:flutter_location/source/widget/custom_notefield.dart';
 import 'package:flutter_location/source/widget/status_koneksi.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:geolocator/geolocator.dart';
 
 class ScanQR extends StatefulWidget {
   const ScanQR({super.key});

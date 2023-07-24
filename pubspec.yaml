@@ -58,7 +58,7 @@ dependencies:
   awesome_dialog: ^3.0.2
   flutter_barcode_scanner: ^2.0.0
   image_cropper: ^4.0.1
-  image_picker: ^0.8.6
+  image_picker: ^0.8.9
   flutter_background_service: ^2.4.5
   mqtt_client: ^9.7.2
   connectivity_plus: ^3.0.2

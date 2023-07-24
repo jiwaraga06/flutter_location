@@ -19,6 +19,7 @@ class TabBarCubit extends Cubit<TabBarState> {
     "transports": ["websocket"],
     "autoConnect": false
   });
+  // IO.Socket socket = IO.io('https://api2.sipatex.co.id:2053', IO.OptionBuilder().setTransports(["websocket"]).build());
   Location location = Location();
   bool? _serviceEnabled;
   PermissionStatus? _permissionGranted;
@@ -68,7 +69,6 @@ class TabBarCubit extends Cubit<TabBarState> {
       _permissionGranted = await location.requestPermission();
       if (_permissionGranted != PermissionStatus.granted) {
         print('granted');
-
         return;
       }
     }
@@ -109,24 +109,36 @@ class TabBarCubit extends Cubit<TabBarState> {
           }).toList()
         };
         var encode = jsonEncode(body);
-        // print(encode);
-        if (result.length >= 20) {
-          Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
-            // whenevery connection status is changed.
-            print('Status Koneksi: $result');
-            if (result != ConnectivityResult.none) {
-              myReposity!.postHistoryLokasiSecurity(encode).then((value) async {
-                var json = jsonDecode(value.body);
-                var statusCode = value.statusCode;
-                if (statusCode == 200) {
-                  await SQLHelper.deleteHistory();
-                } else if (json == 'Holding') {
-                  print('di holding');
-                }
-                // print('MSG POST HISTORY: $json');
-              });
+        print("Result length: ${result.length}");
+        if (result.length >= 10) {
+          // Connectivity().onConnectivityChanged.listen((ConnectivityResult connectivityResult) {
+          // whenevery connection status is changed.
+          // print('Status Koneksi: $result');
+          // if (connectivityResult == ConnectivityResult.mobile) {
+          myReposity!.postHistoryLokasiSecurity(encode).then((value) async {
+            var json = jsonDecode(value.body);
+            var statusCode = value.statusCode;
+            if (statusCode == 200) {
+              await SQLHelper.deleteHistory();
+            } else if (json == 'Holding') {
+              print('di holding');
             }
+            print('MSG POST HISTORY: $json');
           });
+          // }
+          // else if (connectivityResult == ConnectivityResult.wifi) {
+          //   myReposity!.postHistoryLokasiSecurity(encode).then((value) async {
+          //     var json = jsonDecode(value.body);
+          //     var statusCode = value.statusCode;
+          //     if (statusCode == 200) {
+          //       await SQLHelper.deleteHistory();
+          //     } else if (json == 'Holding') {
+          //       print('di holding');
+          //     }
+          //     print('MSG POST HISTORY: $json');
+          //   });
+          // }
+          // });
         }
       });
     }
@@ -170,7 +182,7 @@ class TabBarCubit extends Cubit<TabBarState> {
 
   void permissionCheck() async {
     print('Background');
-     LocationData _locationData;
+    LocationData _locationData;
     _serviceEnabled = await location.serviceEnabled();
     if (!_serviceEnabled!) {
       _serviceEnabled = await location.requestService();

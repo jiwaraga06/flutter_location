@@ -289,7 +289,7 @@ class SQLHelper {
           ''');
     // print('cari');
     // print(cari);
-    if (cari.length == 0) {
+    if (cari.isEmpty) {
       final data = {
         'id': id,
         'nama_lokasi': nama_lokasi,
@@ -316,7 +316,7 @@ class SQLHelper {
     var cari = await db.query('lokasi', where: 'nama_lokasi = ? ', whereArgs: [nama_lokasi], limit: 1);
     // print('cari');
     // print(cari);
-    if (cari.length != 0) {
+    if (cari.isNotEmpty) {
       showDialog(
         context: context,
         builder: (context) {
@@ -337,7 +337,7 @@ class SQLHelper {
         },
       );
     }
-    if (cari.length == 0) {
+    if (cari.isEmpty) {
       final data = {
         'nama_lokasi': nama_lokasi,
         'lati': lati,
@@ -382,7 +382,7 @@ class SQLHelper {
     var cari = await db.query('lokasi', where: 'nama_lokasi = ? ', whereArgs: [nama_lokasi], limit: 1);
     // print('cari');
     // print(cari);
-    if (cari.length != 0) {
+    if (cari.isNotEmpty) {
       showDialog(
         context: context,
         builder: (context) {
@@ -403,7 +403,7 @@ class SQLHelper {
         },
       );
     }
-    if (cari.length == 0) {
+    if (cari.isEmpty) {
       final data = {
         'nama_lokasi': nama_lokasi,
         'lati': lati,
@@ -469,7 +469,7 @@ class SQLHelper {
           ''');
     // print('task');
     // print(cari);
-    if (cari.length == 0) {
+    if (cari.isEmpty) {
       final data = {
         'id': id,
         'id_lokasi': id_lokasi,
@@ -493,7 +493,7 @@ class SQLHelper {
     var cari = await db.query('tasks', where: 'task = ?', whereArgs: [task]);
     // print('task');
     // print(cari);
-    if (cari.length != 0) {
+    if (cari.isNotEmpty) {
       showDialog(
         context: context,
         builder: (context) {
@@ -514,7 +514,7 @@ class SQLHelper {
         },
       );
     }
-    if (cari.length == 0) {
+    if (cari.isEmpty) {
       final data = {
         'id_lokasi': id_lokasi,
         'task': task,
@@ -556,7 +556,7 @@ class SQLHelper {
     var cari = await db.query('tasks', where: 'task = ?', whereArgs: [task]);
     // print('task');
     // print(cari);
-    if (cari.length != 0) {
+    if (cari.isNotEmpty) {
       showDialog(
         context: context,
         builder: (context) {
@@ -577,7 +577,7 @@ class SQLHelper {
         },
       );
     }
-    if (cari.length == 0) {
+    if (cari.isEmpty) {
       final data = {
         'id': id,
         'id_lokasi': id_lokasi,
@@ -643,7 +643,7 @@ class SQLHelper {
           ''');
     // print('sub_task');
     // print(cari);
-    if (cari.length == 0) {
+    if (cari.isEmpty) {
       final data = {
         'id': id,
         'id_task': id_task,
@@ -666,7 +666,7 @@ class SQLHelper {
     var cari = await db.query('sub_task', where: 'sub_task = ? ', whereArgs: [sub_task]);
     // print('sub_task');
     // print(cari);
-    if (cari.length != 0) {
+    if (cari.isNotEmpty) {
       showDialog(
         context: context,
         builder: (context) {
@@ -687,7 +687,7 @@ class SQLHelper {
         },
       );
     }
-    if (cari.length == 0) {
+    if (cari.isEmpty) {
       final data = {
         'id_task': id_task,
         'sub_task': sub_task,
@@ -728,7 +728,7 @@ class SQLHelper {
     var cari = await db.query('sub_task', where: 'sub_task = ? ', whereArgs: [sub_task]);
     // print('sub_task');
     // print(cari);
-    if (cari.length != 0) {
+    if (cari.isNotEmpty) {
       showDialog(
         context: context,
         builder: (context) {
@@ -749,7 +749,7 @@ class SQLHelper {
         },
       );
     }
-    if (cari.length == 0) {
+    if (cari.isEmpty) {
       final data = {
         'id': id,
         'id_task': id_task,

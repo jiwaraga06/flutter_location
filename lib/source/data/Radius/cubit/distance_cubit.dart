@@ -21,12 +21,7 @@ class DistanceCubit extends Cubit<DistanceState> {
     await Geolocator.getCurrentPosition().then((value) {
       print('LatQr: $latQr - LongQr: $longQr');
       print('My Position: $value');
-      var valueDistance = Geolocator.distanceBetween(
-        latQr!,
-        longQr!,
-        value.latitude,
-        value.longitude,
-      );
+      var valueDistance = Geolocator.distanceBetween(latQr!, longQr!, value.latitude, value.longitude);
       if (isOffline == true) {
         myReposity!.getRadius().then((value) async {
           var json = jsonDecode(value.body);
@@ -72,7 +67,7 @@ class DistanceCubit extends Cubit<DistanceState> {
 
   void getTaskByLokasiLokal(id_lokasi) async {
     emit(AbsenSecurityLoading());
-    Future history =  SQLHelper.getLokasiByID(id_lokasi);
+    Future history = SQLHelper.getLokasiByID(id_lokasi);
     history.then((value) {
       print('value');
       print(value);
