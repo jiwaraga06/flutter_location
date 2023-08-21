@@ -8,6 +8,7 @@ import 'package:flutter_location/source/data/Auth/cubit/auth_cubit.dart';
 import 'package:flutter_location/source/data/CheckInternet/cubit/check_internet_cubit.dart';
 import 'package:flutter_location/source/data/Mqtt/cubit/mqtt_cubit.dart';
 import 'package:flutter_location/source/data/TabBar/cubit/tab_bar_cubit.dart';
+import 'package:flutter_location/source/env.dart';
 import 'package:flutter_location/source/router/string.dart';
 import 'package:flutter_location/source/widget/custom_banner.dart';
 import 'package:flutter_location/source/widget/custom_btnLogout.dart';
@@ -195,19 +196,19 @@ class _ProfileState extends State<Profile> {
                                     children: [
                                       TextFormField(
                                         controller: controllerBerita,
-                                        decoration: InputDecoration(hintText: 'Masukan Isi Berita', prefixIcon: Icon(Icons.message)),
+                                        decoration: const InputDecoration(hintText: 'Masukan Isi Berita', prefixIcon: Icon(Icons.message)),
                                       ),
                                       const SizedBox(height: 8),
                                       SizedBox(
                                         width: MediaQuery.of(context).size.width,
                                         child: TextButton(
                                             style: TextButton.styleFrom(backgroundColor: Colors.blue[50]),
-                                            onPressed: () async{
+                                            onPressed: () async {
                                               BlocProvider.of<MqttCubit>(context).send(controllerBerita.text);
                                               await Future.delayed(const Duration(seconds: 1));
                                               controllerBerita.clear();
                                             },
-                                            child: Text("Kirim Berita")),
+                                            child: const Text("Kirim Berita")),
                                       ),
                                       const SizedBox(height: 8),
                                       SizedBox(
@@ -217,7 +218,7 @@ class _ProfileState extends State<Profile> {
                                             Navigator.pushNamed(context, CHECKPOINT_LOKAL);
                                           },
                                           style: ElevatedButton.styleFrom(backgroundColor: Colors.deepPurple),
-                                          child: Text('Checkpoint Offline'),
+                                          child: const Text('Checkpoint Offline'),
                                         ),
                                       ),
                                       const SizedBox(height: 8),
@@ -228,7 +229,7 @@ class _ProfileState extends State<Profile> {
                                             Navigator.pushNamed(context, ABSEN_LOKAL);
                                           },
                                           style: ElevatedButton.styleFrom(backgroundColor: Colors.teal),
-                                          child: Text('Absen Checkpoint Offline'),
+                                          child: const Text('Absen Checkpoint Offline'),
                                         ),
                                       ),
                                     ],
@@ -242,7 +243,7 @@ class _ProfileState extends State<Profile> {
                                             children: [
                                               TextFormField(
                                                 controller: controllerBerita,
-                                                decoration: InputDecoration(hintText: 'Masukan Isi Berita', prefixIcon: Icon(Icons.message)),
+                                                decoration: const InputDecoration(hintText: 'Masukan Isi Berita', prefixIcon: Icon(Icons.message)),
                                               ),
                                               const SizedBox(height: 8),
                                               SizedBox(
@@ -253,7 +254,7 @@ class _ProfileState extends State<Profile> {
                                                       controllerBerita.clear();
                                                       BlocProvider.of<MqttCubit>(context).send(controllerBerita.text);
                                                     },
-                                                    child: Text("Kirim Berita")),
+                                                    child: const Text("Kirim Berita")),
                                               ),
                                               const SizedBox(height: 8),
                                               SizedBox(
@@ -261,7 +262,7 @@ class _ProfileState extends State<Profile> {
                                                 child: ElevatedButton(
                                                   onPressed: () {},
                                                   style: ElevatedButton.styleFrom(backgroundColor: Colors.deepPurple),
-                                                  child: Text('Checkpoint Offline'),
+                                                  child: const Text('Checkpoint Offline'),
                                                 ),
                                               ),
                                             ],
@@ -272,7 +273,7 @@ class _ProfileState extends State<Profile> {
                                           child: ElevatedButton(
                                             onPressed: () {},
                                             style: ElevatedButton.styleFrom(backgroundColor: Colors.teal),
-                                            child: Text('Absen Checkpoint Offline'),
+                                            child: const Text('Absen Checkpoint Offline'),
                                           ),
                                         )
                                   : role.length == 0
@@ -290,13 +291,14 @@ class _ProfileState extends State<Profile> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         const SizedBox(height: 8),
-                        Text(
+                        const Text(
                           '''CATATAN: Jika Sudah Selesai Mengerjakan Tugas, 
 Silahkan Hapus Aplikasi Security Point di Riwayat Aplikasi, 
 Tidak Perlu Logout Akun
                           ''',
                           style: TextStyle(color: Colors.grey, fontSize: 15),
                         ),
+                        const Text("Version: $versiapp"),
                         const SizedBox(height: 8),
                         Padding(
                           padding: const EdgeInsets.all(8.0),

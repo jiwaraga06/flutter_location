@@ -50,9 +50,8 @@ class _AbsenCheckpointState extends State<AbsenCheckpoint> {
   Future pilihGambar() async {
     XFile? gambar = await ImagePicker().pickImage(
       source: ImageSource.camera,
-      maxHeight: 400,
+      maxHeight: 600,
       maxWidth: 300,
-      imageQuality: 100,
     );
     cropGambar(gambar!.path);
   }
@@ -60,6 +59,7 @@ class _AbsenCheckpointState extends State<AbsenCheckpoint> {
   Future cropGambar(filePath) async {
     cropedGambar = await ImageCropper().cropImage(
       sourcePath: filePath,
+      compressQuality: 100,
       aspectRatioPresets: [CropAspectRatioPreset.square],
       uiSettings: [
         AndroidUiSettings(
